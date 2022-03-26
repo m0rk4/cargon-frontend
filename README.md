@@ -6,7 +6,7 @@ In the project directory, you can run:
 
 ### `npm ci`
 
-Does clean dependencies install. Prevents modification of package-lock file. 
+Does clean dependencies install. Prevents modification of package-lock file.
 
 ### `npm start`
 
