@@ -3,71 +3,35 @@ import { MainLayout } from '../../layouts/MainLayout';
 import React, { useEffect, useState } from 'react';
 import { Table, Tag } from 'antd';
 import { User } from './models/user.interface';
-
-export interface UserItem extends User {
-  key: string;
-}
-
-const sampleUsers: User[] = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Brown',
-    email: 'test1@mail.com',
-    isRegistrationApproved: false,
-    isActive: false,
-  },
-  {
-    id: 2,
-    firstName: 'Mark',
-    lastName: 'Brown',
-    email: 'test2@mail.com',
-    isRegistrationApproved: true,
-    isActive: false,
-  },
-  {
-    id: 3,
-    firstName: 'Vlad',
-    lastName: 'Brown',
-    email: 'test3@mail.com',
-    isRegistrationApproved: true,
-    isActive: true,
-  },
-];
+import { DriverApplication } from './models/driver-application.interface';
 
 const UsersPage: React.FC = () => {
-  const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [applications, setApplications] = useState<DriverApplication[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     async function fetchUsers() {
-      /**
-       * TODO: replace with getUsers call.
-       */
-      const fetchedUsers: User[] = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(sampleUsers);
-        }, 1000);
-      });
-      setUsers(
-        fetchedUsers.map(
-          (user): UserItem => ({ ...user, key: user.id.toString() }),
-        ),
+      const responses = await Promise.all([
+        fetch('/user'),
+        fetch('/driver-application/not-approved'),
+      ]);
+
+      const [users, applications] = await Promise.all(
+        responses.map((it) => it.json()),
       );
+
+      setUsers(users);
+      setApplications(applications);
       setLoading(false);
     }
 
     fetchUsers();
   }, []);
 
-  const renderTags = (user: UserItem) => {
-    const color =
-      !user.isRegistrationApproved || !user.isActive ? 'red' : 'green';
-    const text = !user.isRegistrationApproved
-      ? 'Not Approved'
-      : !user.isActive
-      ? 'Not Active'
-      : 'Active';
+  const renderUserTags = (user: User) => {
+    const color = user.isActive ? 'green' : 'red';
+    const text = user.isActive ? 'Active' : 'Blocked';
     return (
       <Tag color={color} key={text}>
         {text}
@@ -75,42 +39,80 @@ const UsersPage: React.FC = () => {
     );
   };
 
-  const renderActions = (user: UserItem) => {
-    const initialText = !user.isRegistrationApproved
-      ? 'Approve'
-      : !user.isActive
-      ? 'Activate'
-      : 'Deactivate';
+  const renderDriverApplicationsTags = () => (
+    <Tag color="orange" key="Approve">
+      Not Approved
+    </Tag>
+  );
 
-    const onClick = async () => {
-      setLoading(true);
-      /**
-       * TODO: replace with real API call.
-       */
-      await fetch('https://jsonplaceholder.typicode.com/todos/1');
+  const onBlock = async (id: number) => {
+    const response = await updateUser(`/user/${id}/block`);
+    if (!response.ok) return;
 
-      setLoading(false);
-
-      const index = users.findIndex((usr) => usr.id === user.id);
-      if (index === -1) return;
-
-      const newUser: UserItem = !user.isRegistrationApproved
-        ? {
-            ...users[index],
-            isRegistrationApproved: !user.isRegistrationApproved,
-          }
-        : { ...users[index], isActive: !user.isActive };
-      setUsers([...users.slice(0, index), newUser, ...users.slice(index + 1)]);
-    };
-
-    return <a onClick={onClick}>{initialText}</a>;
+    toggleUserState(id);
   };
 
-  const columns = [
+  const onActivate = async (id: number) => {
+    const response = await updateUser(`/user/${id}/activate`);
+    if (!response.ok) return;
+
+    toggleUserState(id);
+  };
+
+  const onApprove = async (id: number) => {
+    const response = await updateUser(`/driver-application/${id}/approve`);
+    if (!response.ok) return;
+
+    removeApplication(id);
+  };
+
+  const updateUser = async (url: string) => {
+    setLoading(true);
+    const response = await fetch(url, { method: 'PUT' });
+    setLoading(false);
+    return response;
+  };
+
+  const renderUserActions = ({ id, isActive }: User) => {
+    if (isActive) {
+      return <a onClick={() => onBlock(id)}>Block</a>;
+    }
+    return <a onClick={() => onActivate(id)}>Activate</a>;
+  };
+
+  const renderApplicationActions = (id: number) => (
+    <a onClick={() => onApprove(id)}>Approve</a>
+  );
+
+  const removeApplication = (id: number) => {
+    const index = applications.findIndex((app) => app.id === id);
+    if (index === -1) return;
+
+    setApplications([
+      ...applications.slice(0, index),
+      ...applications.slice(index + 1),
+    ]);
+  };
+
+  const toggleUserState = (id: number) => {
+    const index = users.findIndex((user) => user.id === id);
+    if (index === -1) return;
+
+    setUsers([
+      ...users.slice(0, index),
+      {
+        ...users[index],
+        isActive: !users[index].isActive,
+      },
+      ...users.slice(index + 1),
+    ]);
+  };
+
+  const commonColumns = [
     {
       title: 'Name',
       key: 'name',
-      render: (record: UserItem) => (
+      render: (record: User | DriverApplication) => (
         <a>{`${record.firstName} ${record.lastName}`}</a>
       ),
     },
@@ -119,25 +121,51 @@ const UsersPage: React.FC = () => {
       dataIndex: 'email',
       key: 'email',
     },
+  ];
+
+  const userColumns = [
+    ...commonColumns,
     {
       title: 'Tags',
       key: 'tags',
-      render: renderTags,
+      render: renderUserTags,
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: renderActions,
+      title: 'Actions',
+      key: 'actions',
+      render: renderUserActions,
+    },
+  ];
+
+  const applicationTags = [
+    ...commonColumns,
+    {
+      title: 'Tags',
+      key: 'tags',
+      render: renderDriverApplicationsTags,
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      dataIndex: 'id',
+      render: renderApplicationActions,
     },
   ];
 
   return (
     <MainLayout>
       <Table
+        title={() => 'Driver Applications'}
+        bordered
+        loading={loading}
+        columns={applicationTags}
+        dataSource={applications}
+      />
+      <Table
         title={() => 'Users'}
         bordered
         loading={loading}
-        columns={columns}
+        columns={userColumns}
         dataSource={users}
       />
     </MainLayout>

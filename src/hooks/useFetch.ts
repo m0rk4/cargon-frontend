@@ -36,6 +36,7 @@ function useFetching<T>(initialUrl: string, initialData: T) {
     setUrl,
     data: fetchedData,
     setData: setFetchedData,
+    setLoading: setIsLoading,
   };
 }
 

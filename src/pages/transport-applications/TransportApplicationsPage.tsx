@@ -7,17 +7,12 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import useFetching from '../../hooks/useFetch';
 
 const TransportApplicationsPage: React.FC = () => {
-  const {
-    data,
-    isLoading,
-    hasError,
-    setData,
-  } = useFetching<TransportApplication[]>('/transport-application/pending', []);
+  const { data, isLoading, hasError, setData, setLoading } = useFetching<
+    TransportApplication[]
+  >('/transport-application/pending', []);
 
   const onApprove = async (id: number) => {
-    const response = await fetch(`/transport-application/${id}/approve`, {
-      method: 'PUT',
-    });
+    const response = await updateStatus(`/transport-application/${id}/approve`);
     if (!response.ok) return;
 
     removeApplication(id);
@@ -25,13 +20,18 @@ const TransportApplicationsPage: React.FC = () => {
   };
 
   const onReject = async (id: number) => {
-    const response = await fetch(`/transport-application/${id}/reject`, {
-      method: 'PUT',
-    });
+    const response = await updateStatus(`/transport-application/${id}/reject`);
     if (!response.ok) return;
 
     removeApplication(id);
     openNotification('Rejected!', <CloseCircleOutlined />);
+  };
+
+  const updateStatus = async (url: string) => {
+    setLoading(true);
+    const response = await fetch(url, { method: 'PUT' });
+    setLoading(false);
+    return response;
   };
 
   const removeApplication = (id: number) => {

@@ -1,7 +1,7 @@
-export interface User {
+export interface DriverApplication {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
-  isActive: boolean;
+  isApplicationApproved: boolean;
 }

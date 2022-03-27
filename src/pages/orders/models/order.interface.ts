@@ -6,7 +6,7 @@ export interface Order {
   id: number;
   createdAt: string;
   updatedAt: string;
-  owner: User;
+  user: User;
   fromLocation: GeoLocation;
   toLocation: GeoLocation;
   status: OrderStatus;
