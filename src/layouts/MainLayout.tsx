@@ -61,7 +61,7 @@ export const MainLayout: React.FC<{ children: ReactNode }> = (props: {
       >
         <img src={logo} className="logo" alt={'logo'} />
         <Menu
-          defaultOpenKeys={[subMenuId]}
+          defaultOpenKeys={['sub1', 'sub2', 'sub3']}
           theme="dark"
           mode="inline"
           defaultSelectedKeys={[menuId]}

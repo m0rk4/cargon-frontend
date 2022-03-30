@@ -22,12 +22,11 @@ const CreateTransportApplicationPage: React.FC = () => {
       return;
     }
     message.success('Successfully uploaded transport application.');
-
   };
 
   return (
     <MainLayout>
-      <h1>Upload document for your application:</h1>
+      <h1>Upload document for your transport application:</h1>
       <Upload.Dragger onChange={onChange}
                       accept={'.pdf'}
                       action={`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/upload`}
