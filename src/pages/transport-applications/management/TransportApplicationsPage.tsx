@@ -1,15 +1,19 @@
 import React from 'react';
-import { MainLayout } from '../../layouts/MainLayout';
-import { notification, Space, Table } from 'antd';
-import { User } from '../users/models/user.interface';
+import { MainLayout } from '../../../layouts/MainLayout';
+import { Button, notification, Result, Space, Table } from 'antd';
+import { User } from '../../users/managemnt/models/user.interface';
 import { TransportApplication } from './models/transport-application.interface';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import useFetching from '../../hooks/useFetch';
+import { CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined } from '@ant-design/icons';
+import useFetching from '../../../hooks/useFetch';
 
 const TransportApplicationsPage: React.FC = () => {
-  const { data, isLoading, hasError, setData, setLoading } = useFetching<
-    TransportApplication[]
-  >('/transport-application/pending', []);
+  const {
+    data,
+    isLoading,
+    hasError,
+    setData,
+    setLoading,
+  } = useFetching<TransportApplication[]>('/transport-application/pending', []);
 
   const onApprove = async (id: number) => {
     const response = await updateStatus(`/transport-application/${id}/approve`);
@@ -41,15 +45,13 @@ const TransportApplicationsPage: React.FC = () => {
     setData([...data.slice(0, index), ...data.slice(index + 1)]);
   };
 
-  const onOpenDocument = async (documentUid: string) => {
-    const response = await fetch(
-      'https://jsonplaceholder.typicode.com/comments',
-    );
+  const onOpenDocument = async (documentPublicId: string) => {
+    const response = await fetch(`/transport-application/document?documentPublicId=${documentPublicId}`);
     const blob = await response.blob();
     const objectURL = URL.createObjectURL(new Blob([blob]));
     const link = document.createElement('a');
     link.href = objectURL;
-    link.setAttribute('download', `${documentUid}.json`);
+    link.setAttribute('download', `document.pdf`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -63,7 +65,9 @@ const TransportApplicationsPage: React.FC = () => {
   );
 
   const renderDocuments = (documentUid: string) => (
-    <a onClick={() => onOpenDocument(documentUid)}>Download</a>
+    <Button onClick={() => onOpenDocument(documentUid)} type='primary' shape='round' icon={<DownloadOutlined />}>
+      Download
+    </Button>
   );
 
   const openNotification = (text: string, icon: JSX.Element) =>
@@ -86,7 +90,7 @@ const TransportApplicationsPage: React.FC = () => {
     {
       title: 'Document',
       key: 'document',
-      dataIndex: 'documentUid',
+      dataIndex: 'documentPublicId',
       render: renderDocuments,
     },
     {
@@ -101,7 +105,7 @@ const TransportApplicationsPage: React.FC = () => {
     <MainLayout>
       {data && (
         <Table
-          loading={isLoading}
+          loading={isLoading || hasError}
           title={() => 'Transport Applications'}
           bordered
           columns={columns}
@@ -111,7 +115,10 @@ const TransportApplicationsPage: React.FC = () => {
           }))}
         />
       )}
-      {hasError && <h1>Something went wrong...</h1>}
+      {hasError && <Result
+        status='warning'
+        title='There are some problems with your operation.'
+      />}
     </MainLayout>
   );
 };

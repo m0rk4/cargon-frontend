@@ -1,7 +1,7 @@
-import { MainLayout } from '../../layouts/MainLayout';
+import { MainLayout } from '../../../layouts/MainLayout';
 
 import React, { useEffect, useState } from 'react';
-import { Table, Tag } from 'antd';
+import { Result, Table, Tag } from 'antd';
 import { User } from './models/user.interface';
 import { DriverApplication } from './models/driver-application.interface';
 
@@ -9,13 +9,19 @@ const UsersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState<DriverApplication[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [hasError, setError] = useState(false);
 
   useEffect(() => {
-    async function fetchUsers() {
+    const fetchUsers = async () => {
       const responses = await Promise.all([
         fetch('/user'),
         fetch('/driver-application/not-approved'),
       ]);
+
+      if (responses.some(response => !response.ok)) {
+        setError(true);
+        return;
+      }
 
       const [users, applications] = await Promise.all(
         responses.map((it) => it.json()),
@@ -24,7 +30,7 @@ const UsersPage: React.FC = () => {
       setUsers(users);
       setApplications(applications);
       setLoading(false);
-    }
+    };
 
     fetchUsers();
   }, []);
@@ -40,7 +46,7 @@ const UsersPage: React.FC = () => {
   };
 
   const renderDriverApplicationsTags = () => (
-    <Tag color="orange" key="Approve">
+    <Tag color='orange' key='Approve'>
       Not Approved
     </Tag>
   );
@@ -168,6 +174,10 @@ const UsersPage: React.FC = () => {
         columns={userColumns}
         dataSource={users}
       />
+      {hasError && <Result
+        status='warning'
+        title='There are some problems with your operation.'
+      />}
     </MainLayout>
   );
 };
