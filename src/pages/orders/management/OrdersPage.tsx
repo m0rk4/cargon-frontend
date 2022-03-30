@@ -1,16 +1,16 @@
 import React from 'react';
-import { MainLayout } from '../../layouts/MainLayout';
-import { notification, Table } from 'antd';
+import { MainLayout } from '../../../layouts/MainLayout';
+import { notification, Result, Table } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Order } from './models/order.interface';
 import { GeoLocation } from './models/location.interface';
-import useFetching from '../../hooks/useFetch';
-import { User } from '../users/models/user.interface';
+import useFetching from '../../../hooks/useFetch';
+import { User } from '../../users/managemnt/models/user.interface';
 
 const OrdersPage: React.FC = () => {
   const { data, isLoading, hasError, setData, setLoading } = useFetching<
     Order[]
-  >('order/not-approved', []);
+  >('/order/not-approved', []);
 
   const renderUser = ({ firstName, lastName }: User) => (
     <a>{`${firstName} ${lastName}`}</a>
@@ -100,7 +100,7 @@ const OrdersPage: React.FC = () => {
         <Table
           title={() => 'Orders'}
           bordered
-          loading={isLoading}
+          loading={isLoading || hasError}
           columns={columns}
           dataSource={data.map((order) => ({
             ...order,
@@ -108,7 +108,10 @@ const OrdersPage: React.FC = () => {
           }))}
         />
       )}
-      {hasError && <h1>Something went wrong...</h1>}
+      {hasError &&  <Result
+        status="warning"
+        title="There are some problems with your operation."
+      />}
     </MainLayout>
   );
 };

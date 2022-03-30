@@ -3,39 +3,40 @@ import React, { lazy, Suspense } from 'react';
 import { Loading } from '../components/loading';
 import { AppRoutes } from './routes.enum';
 
-const UsersPage = lazy(() => import('../pages/users/UsersPage'));
-const OrdersPage = lazy(() => import('../pages/orders/OrdersPage'));
+const UsersPage = lazy(() => import('../pages/users/managemnt/UsersPage'));
+const OrdersPage = lazy(() => import('../pages/orders/management/OrdersPage'));
 const TransportApplicationsPage = lazy(
-  () => import('../pages/transport-applications/TransportApplicationsPage'),
+  () =>
+    import(
+      '../pages/transport-applications/management/TransportApplicationsPage'
+    ),
 );
 
-export const ManagementRoutes = () => {
-  return (
-    <Routes>
-      <Route
-        path={AppRoutes.USERS}
-        element={
-          <Suspense fallback={<Loading />}>
-            <UsersPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path={AppRoutes.ORDERS}
-        element={
-          <Suspense fallback={<Loading />}>
-            <OrdersPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path={AppRoutes.TRANSPORT_APPLICATIONS}
-        element={
-          <Suspense fallback={<Loading />}>
-            <TransportApplicationsPage />
-          </Suspense>
-        }
-      />
-    </Routes>
-  );
-};
+export const ManagementRoutes: React.FC = () => (
+  <Routes>
+    <Route
+      path={`${AppRoutes.MANAGEMENT}/${AppRoutes.USERS}`}
+      element={
+        <Suspense fallback={<Loading />}>
+          <UsersPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path={`${AppRoutes.MANAGEMENT}/${AppRoutes.ORDERS}`}
+      element={
+        <Suspense fallback={<Loading />}>
+          <OrdersPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path={`${AppRoutes.MANAGEMENT}/${AppRoutes.TRANSPORT_APPLICATIONS}`}
+      element={
+        <Suspense fallback={<Loading />}>
+          <TransportApplicationsPage />
+        </Suspense>
+      }
+    />
+  </Routes>
+);
