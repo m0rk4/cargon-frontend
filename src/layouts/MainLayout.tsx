@@ -41,7 +41,7 @@ export const MainLayout: React.FC<{ children: ReactNode }> = (props: {
   const currentRoute =
     AllAppRoutes.find((route) => location.pathname.includes(route)) ??
     AppRoutes.NOT_EXISTING_ROUTE;
-  const [subMenuId, menuId] = URL_TO_MENU_MAP.get(currentRoute) ?? ['', ''];
+  const [, menuId] = URL_TO_MENU_MAP.get(currentRoute) ?? ['', ''];
 
   const [collapsed, setCollapsed] = useState(false);
 
