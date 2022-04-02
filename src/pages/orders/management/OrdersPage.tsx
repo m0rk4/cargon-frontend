@@ -10,7 +10,7 @@ import { User } from '../../users/managemnt/models/user.interface';
 const OrdersPage: React.FC = () => {
   const { data, isLoading, hasError, setData, setLoading } = useFetching<
     Order[]
-  >('/order/not-approved', []);
+  >('/order/pending', []);
 
   const renderUser = ({ firstName, lastName }: User) => (
     <a>{`${firstName} ${lastName}`}</a>
