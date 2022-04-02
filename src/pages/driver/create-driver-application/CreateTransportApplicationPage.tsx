@@ -27,15 +27,20 @@ const CreateTransportApplicationPage: React.FC = () => {
   return (
     <MainLayout>
       <h1>Upload document for your transport application:</h1>
-      <Upload.Dragger onChange={onChange}
-                      accept={'.pdf'}
-                      action={`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/upload`}
-                      name={'file'} data={{ upload_preset: process.env.REACT_APP_CLOUD_UPLOAD_PRESET }}>
-        <p className='ant-upload-drag-icon'>
+      <Upload.Dragger
+        onChange={onChange}
+        accept={'.pdf'}
+        action={`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/upload`}
+        name={'file'}
+        data={{ upload_preset: process.env.REACT_APP_CLOUD_UPLOAD_PRESET }}
+      >
+        <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
-        <p className='ant-upload-text'>Click or drag file to this area to upload</p>
-        <p className='ant-upload-hint'>Support for a single upload.</p>
+        <p className="ant-upload-text">
+          Click or drag file to this area to upload
+        </p>
+        <p className="ant-upload-hint">Support for a single upload.</p>
       </Upload.Dragger>
     </MainLayout>
   );
