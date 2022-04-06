@@ -1,7 +1,7 @@
 import React from 'react';
-import { Cargo } from './CreateCargoForm';
-import { GeoLocation } from '../../../../features/orders/models/location.interface';
-import { Descriptions, Table } from 'antd';
+import { GeoLocation } from './models/location.interface';
+import { Descriptions, Table, Typography } from 'antd';
+import { Cargo } from './models/cargo.interface';
 
 interface OrderConfirmationProps {
   cargos: Cargo[];
@@ -44,7 +44,10 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({
 
   return (
     <>
-      <Descriptions title="Order Info" layout="vertical" bordered>
+      <Typography.Title style={{ padding: '16px' }} level={3}>
+        Order Information
+      </Typography.Title>
+      <Descriptions layout="horizontal" bordered>
         <Descriptions.Item label="Source City">
           {fromLocation?.city.name}
         </Descriptions.Item>
@@ -54,18 +57,21 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({
         <Descriptions.Item label="Source Home">
           {fromLocation?.home}
         </Descriptions.Item>
-        <Descriptions.Item label="Source City">
+        <Descriptions.Item label="Destination City">
           {toLocation?.city.name}
         </Descriptions.Item>
-        <Descriptions.Item label="Source Street">
+        <Descriptions.Item label="Destination Street">
           {toLocation?.street.name}
         </Descriptions.Item>
-        <Descriptions.Item label="Source Home">
+        <Descriptions.Item label="Destination Home">
           {toLocation?.home}
         </Descriptions.Item>
       </Descriptions>
       <Table
-        title={() => 'Order Cargos'}
+        title={() => (
+          <Typography.Title level={3}>Order Cargos</Typography.Title>
+        )}
+        pagination={{ pageSize: 3 }}
         columns={cargoColumns}
         dataSource={cargos}
       />

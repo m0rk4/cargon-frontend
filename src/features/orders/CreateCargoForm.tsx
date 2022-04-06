@@ -1,29 +1,30 @@
-import React from 'react';
-import { Button, Form, Input, InputNumber, message, Space } from 'antd';
+import React, { VFC } from 'react';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Space,
+  Typography,
+} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Cargo } from './models/cargo.interface';
 
-export interface Cargo {
-  name: string;
-  width: number;
-  length: number;
-  height: number;
-  weight: number;
-}
-
-interface CreateCargoFormProps {
+type CreateCargoFormProps = {
   next: () => void;
   setCargos: (cargos: Cargo[]) => void;
   cargos: Cargo[];
-}
+};
 
-const CreateCargoForm: React.FC<CreateCargoFormProps> = ({
+const CreateCargoForm: VFC<CreateCargoFormProps> = ({
   next,
   cargos,
   setCargos,
 }) => {
-  const onFinish = async ({ cargos }: { cargos: Cargo[] }) => {
+  const onFinish = ({ cargos }: { cargos: Cargo[] }) => {
     if (!cargos?.length) {
-      await message.warn('Please enter at least one cargo!');
+      message.warn('Please enter at least one cargo!');
       return;
     }
     setCargos(cargos);
@@ -32,7 +33,7 @@ const CreateCargoForm: React.FC<CreateCargoFormProps> = ({
 
   return (
     <>
-      <h1>Please add some cargos:</h1>
+      <Typography.Title level={3}>Please Add Order Cargos:</Typography.Title>
       <Form
         name="dynamic_form_nest_item"
         onFinish={onFinish}

@@ -14,6 +14,7 @@ import ApproveAndDeclineActions from '../shared/approve-and-decline-actions/Appr
 import TransportApplicationDownloadButton from './TransportApplicationDownloadButton';
 import { openNotification } from '../../util/notification';
 import { formatDistanceToNow } from 'date-fns';
+import UserLink from '../shared/user-link/UserLink';
 
 const TransportApplicationsPage = () => {
   const {
@@ -21,13 +22,10 @@ const TransportApplicationsPage = () => {
     isFetching,
     isError,
   } = useGetPendingTransportApplicationsQuery();
-
   const [approveTransportApplication, { isLoading: isApproving }] =
     useApproveTransportApplicationMutation();
-
   const [declineTransportApplication, { isLoading: isDeclining }] =
     useDeclineTransportApplicationMutation();
-
   const [getTransportApplicationDocument, { isFetching: isDocumentFetching }] =
     useLazyGetTransportApplicationDocumentQuery();
 
@@ -89,9 +87,7 @@ const TransportApplicationsPage = () => {
       title: 'Driver',
       key: 'driver',
       dataIndex: 'driver',
-      render: ({ firstName, lastName }: User) => (
-        <a>{`${firstName} ${lastName}`}</a>
-      ),
+      render: (user: User) => <UserLink user={user} />,
     },
     {
       title: 'Document',

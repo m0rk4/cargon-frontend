@@ -1,9 +1,17 @@
-import React, { useMemo } from 'react';
-import { Button, Form, FormInstance, InputNumber, message, Space } from 'antd';
-import DropDownWIthInput from '../../../../features/shared/dropdown-with-input/DropDownWIthInput';
-import { GeoLocation } from '../../../../features/orders/models/location.interface';
-import { Street } from '../../../../features/orders/models/street.interface';
-import { City } from '../../../../features/orders/models/city.interface';
+import React, { useMemo, VFC } from 'react';
+import {
+  Button,
+  Form,
+  FormInstance,
+  InputNumber,
+  message,
+  Space,
+  Typography,
+} from 'antd';
+import DropDownWIthInput from '../shared/dropdown-with-input/DropDownWIthInput';
+import { GeoLocation } from './models/location.interface';
+import { Street } from './models/street.interface';
+import { City } from './models/city.interface';
 
 interface CreateLocationFormState {
   cityFrom: string | undefined;
@@ -14,7 +22,7 @@ interface CreateLocationFormState {
   homeTo: number | undefined;
 }
 
-interface CreateLocationFormProps {
+type CreateLocationFormProps = {
   next: () => void;
   setFromLocation: (val: GeoLocation) => void;
   setToLocation: (val: GeoLocation) => void;
@@ -22,9 +30,9 @@ interface CreateLocationFormProps {
   toLocation: GeoLocation | undefined;
   streets: Street[];
   cities: City[];
-}
+};
 
-const CreateLocationForm: React.FC<CreateLocationFormProps> = ({
+const CreateLocationForm: VFC<CreateLocationFormProps> = ({
   streets,
   cities,
   next,
@@ -85,7 +93,9 @@ const CreateLocationForm: React.FC<CreateLocationFormProps> = ({
 
   return (
     <>
-      <h1>Please add source and destination locations:</h1>
+      <Typography.Title level={3}>
+        Please add source and destination locations:
+      </Typography.Title>
       <Form
         initialValues={formValues}
         layout={'vertical'}

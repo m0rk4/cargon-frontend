@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
-import { MainLayout } from '../../../layouts/MainLayout';
+import React, { useState, VFC } from 'react';
+import { MainLayout } from '../../layouts/MainLayout';
 import { Button, message, Steps } from 'antd';
 import './CreateOrdersPage.css';
-import CreateCargoForm, { Cargo } from './components/CreateCargoForm';
-import CreateLocationForm from './components/CreateLocationForm';
-import { GeoLocation } from '../../../features/orders/models/location.interface';
-import OrderConfirmation from './components/OrderConfirmation';
-import useFetching from '../../../hooks/useFetch';
-import { Street } from '../../../features/orders/models/street.interface';
-import { City } from '../../../features/orders/models/city.interface';
-import { Loading } from '../../../features/shared/loading';
-import NetworkErrorResult from '../../../features/shared/network-error-result/NetworkErrorResult';
+import CreateCargoForm from './CreateCargoForm';
+import CreateLocationForm from './CreateLocationForm';
+import { GeoLocation } from './models/location.interface';
+import OrderConfirmation from './OrderConfirmation';
+import { Loading } from '../shared/loading';
+import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
+import {
+  useGetCitiesQuery,
+  useGetStreetsQuery,
+} from '../locations/locationsSlice';
+import { useCreateOrderMutation } from './ordersSlice';
+import { CreateOrderDto } from './models/create-order-dto.interface';
+import { openNotification } from '../../util/notification';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import { Cargo } from './models/cargo.interface';
 
 const { Step } = Steps;
 
@@ -29,24 +35,25 @@ const steps = [
   },
 ];
 
-const CreateOrderPage: React.FC = () => {
+const CreateOrderPage: VFC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [cargos, setCargos] = useState<Cargo[]>([]);
   const [fromLocation, setFromLocation] = useState<GeoLocation>();
   const [toLocation, setToLocation] = useState<GeoLocation>();
 
   const {
-    data: streets,
+    data: streets = [],
     isLoading: streetsLoading,
-    hasError: streetsError,
-  } = useFetching<Street[]>('/location/streets', []);
+    isError: streetsError,
+  } = useGetStreetsQuery();
   const {
-    data: cities,
+    data: cities = [],
     isLoading: citiesLoading,
-    hasError: citiesError,
-  } = useFetching<City[]>('/location/cities', []);
+    isError: citiesError,
+  } = useGetCitiesQuery();
+  const [createOrder, { isLoading: isAdding }] = useCreateOrderMutation();
 
-  if (streetsLoading || citiesLoading) return <Loading />;
+  if (streetsLoading || citiesLoading || isAdding) return <Loading />;
 
   if (streetsError || citiesError)
     return (
@@ -64,51 +71,47 @@ const CreateOrderPage: React.FC = () => {
   };
 
   const onProceed = async () => {
-    const body = {
+    const body: CreateOrderDto = {
       userId: 1,
       toLocation: {
-        ...toLocation,
+        home: toLocation!.home,
         street:
           streets.find(
-            (streetFromDb) => streetFromDb.name === toLocation?.street.name,
-          ) ?? toLocation?.street,
+            (streetFromDb) => streetFromDb.name === toLocation!.street.name,
+          ) ?? toLocation!.street,
         city:
           cities.find(
-            (streetFromDb) => streetFromDb.name === toLocation?.city.name,
-          ) ?? toLocation?.city,
+            (streetFromDb) => streetFromDb.name === toLocation!.city.name,
+          ) ?? toLocation!.city,
       },
       fromLocation: {
-        ...fromLocation,
+        home: fromLocation!.home,
         street:
           streets.find(
             (streetFromDb) => streetFromDb.name === fromLocation?.street.name,
-          ) ?? fromLocation?.street,
+          ) ?? fromLocation!.street,
         city:
           cities.find(
             (streetFromDb) => streetFromDb.name === fromLocation?.city.name,
-          ) ?? fromLocation?.city,
+          ) ?? fromLocation!.city,
       },
       cargos,
     };
 
-    const response = await fetch('/order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok) {
+    try {
+      await createOrder(body).unwrap();
+      openNotification(
+        'Order Creation',
+        'Created successfully!',
+        <CheckCircleOutlined />,
+      );
+      setCargos([]);
+      setToLocation(undefined);
+      setFromLocation(undefined);
+      setCurrentStep(0);
+    } catch (e) {
       message.error('Order creation failed.');
-      return;
     }
-
-    message.success('Order successfully created');
-    setCargos([]);
-    setToLocation(undefined);
-    setFromLocation(undefined);
-    setCurrentStep(0);
   };
 
   return (

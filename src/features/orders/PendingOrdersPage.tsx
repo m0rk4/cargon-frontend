@@ -13,17 +13,14 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { openNotification } from '../../util/notification';
 import ApproveAndDeclineActions from '../shared/approve-and-decline-actions/ApproveAndDeclineActions';
+import UserLink from '../shared/user-link/UserLink';
 
-const OrdersPage: VFC = () => {
+const PendingOrdersPage: VFC = () => {
   const { data: orders = [], isFetching, isError } = useGetPendingOrdersQuery();
-
   const [approveOrder, { isLoading: isApproving }] = useApproveOrderMutation();
-
   const [declineOrder, { isLoading: isDeclining }] = useDeclineOrderMutation();
 
-  const renderUser = ({ firstName, lastName }: User) => (
-    <a>{`${firstName} ${lastName}`}</a>
-  );
+  const renderUser = (user: User) => <UserLink user={user} />;
 
   const renderLocation = ({ city, street, home }: GeoLocation) => (
     <div>{`${city.name}, ${street.name}, ${home}`}</div>
@@ -138,4 +135,4 @@ const OrdersPage: VFC = () => {
   );
 };
 
-export default OrdersPage;
+export default PendingOrdersPage;
