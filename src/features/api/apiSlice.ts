@@ -4,6 +4,6 @@ import { TransportApplication } from '../transport-applications/models/transport
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
-  tagTypes: ['TransportApplication'],
+  tagTypes: ['TransportApplication', 'Order'],
   endpoints: () => ({}),
 });

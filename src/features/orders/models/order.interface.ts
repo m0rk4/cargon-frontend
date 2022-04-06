@@ -1,4 +1,4 @@
-import { User } from '../../../users/managemnt/models/user.interface';
+import { User } from '../../../pages/users/managemnt/models/user.interface';
 import { OrderStatus } from './order-status.interface';
 import { GeoLocation } from './location.interface';
 

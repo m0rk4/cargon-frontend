@@ -2,13 +2,13 @@ import React, { VFC } from 'react';
 import { Space } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
-type TransportApplicationActionsProps = {
+type ApproveAndDeclineActions = {
   id: number;
   onApprove: (id: number) => void;
   onDecline: (id: number) => void;
 };
 
-const TransportApplicationActions: VFC<TransportApplicationActionsProps> = ({
+const ApproveAndDeclineActions: VFC<ApproveAndDeclineActions> = ({
   id,
   onApprove,
   onDecline,
@@ -23,4 +23,4 @@ const TransportApplicationActions: VFC<TransportApplicationActionsProps> = ({
   </Space>
 );
 
-export default TransportApplicationActions;
+export default ApproveAndDeclineActions;

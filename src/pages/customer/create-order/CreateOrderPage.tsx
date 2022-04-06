@@ -4,13 +4,13 @@ import { Button, message, Steps } from 'antd';
 import './CreateOrdersPage.css';
 import CreateCargoForm, { Cargo } from './components/CreateCargoForm';
 import CreateLocationForm from './components/CreateLocationForm';
-import { GeoLocation } from '../../orders/management/models/location.interface';
+import { GeoLocation } from '../../../features/orders/models/location.interface';
 import OrderConfirmation from './components/OrderConfirmation';
 import useFetching from '../../../hooks/useFetch';
-import { Street } from '../../orders/management/models/street.interface';
-import { City } from '../../orders/management/models/city.interface';
-import { Loading } from '../../../components/loading';
-import NetworkErrorResult from '../../../components/network-error-result/NetworkErrorResult';
+import { Street } from '../../../features/orders/models/street.interface';
+import { City } from '../../../features/orders/models/city.interface';
+import { Loading } from '../../../features/shared/loading';
+import NetworkErrorResult from '../../../features/shared/network-error-result/NetworkErrorResult';
 
 const { Step } = Steps;
 

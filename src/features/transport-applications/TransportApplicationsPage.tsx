@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
 import { MainLayout } from '../../layouts/MainLayout';
-import { Table, Typography } from 'antd';
+import { message, Table, Typography } from 'antd';
 import { User } from '../../pages/users/managemnt/models/user.interface';
 import { CheckOutlined } from '@ant-design/icons';
-import NetworkErrorResult from '../../components/network-error-result/NetworkErrorResult';
+import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import {
   useApproveTransportApplicationMutation,
   useDeclineTransportApplicationMutation,
   useGetPendingTransportApplicationsQuery,
   useLazyGetTransportApplicationDocumentQuery,
 } from './transportApplicationSlice';
-import TransportApplicationActions from './TransportApplicationActions';
+import ApproveAndDeclineActions from '../shared/approve-and-decline-actions/ApproveAndDeclineActions';
 import TransportApplicationDownloadButton from './TransportApplicationDownloadButton';
 import { openNotification } from '../../util/notification';
 import { formatDistanceToNow } from 'date-fns';
@@ -40,11 +40,7 @@ const TransportApplicationsPage = () => {
         <CheckOutlined />,
       );
     } catch (e) {
-      openNotification(
-        'Transport application approval',
-        'Approving failed!',
-        <CheckOutlined />,
-      );
+      message.error('Approving failed!');
     }
   };
 
@@ -57,11 +53,7 @@ const TransportApplicationsPage = () => {
         <CheckOutlined />,
       );
     } catch (e) {
-      openNotification(
-        'Transport application approval',
-        'Declining failed!',
-        <CheckOutlined />,
-      );
+      message.error('Declining failed!');
     }
   };
 
@@ -78,7 +70,7 @@ const TransportApplicationsPage = () => {
   };
 
   const renderActions = (id: number) => (
-    <TransportApplicationActions
+    <ApproveAndDeclineActions
       id={id}
       onApprove={onApprove}
       onDecline={onDecline}
@@ -140,7 +132,7 @@ const TransportApplicationsPage = () => {
   return (
     <MainLayout>
       <Table
-        loading={isTableLoading}
+        loading={isTableLoading || isError}
         title={() => (
           <Typography.Title level={2}>Transport Applications</Typography.Title>
         )}
@@ -149,6 +141,7 @@ const TransportApplicationsPage = () => {
           ...app,
           key: app.id,
         }))}
+        pagination={{ pageSize: 8 }}
       />
       {isError && <NetworkErrorResult />}
     </MainLayout>
