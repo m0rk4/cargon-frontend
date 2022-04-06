@@ -6,10 +6,7 @@ import { AppRoutes } from './routes.enum';
 const UsersPage = lazy(() => import('../pages/users/managemnt/UsersPage'));
 const OrdersPage = lazy(() => import('../pages/orders/management/OrdersPage'));
 const TransportApplicationsPage = lazy(
-  () =>
-    import(
-      '../pages/transport-applications/management/TransportApplicationsPage'
-    ),
+  () => import('../features/transport-applications/TransportApplicationsPage'),
 );
 
 export const ManagementRoutes: React.FC = () => (

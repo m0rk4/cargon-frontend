@@ -1,32 +1,30 @@
-import { message, Upload } from 'antd';
-import React from 'react';
-import { MainLayout } from '../../../layouts/MainLayout';
+import { message, Typography, Upload } from 'antd';
+import React, { VFC } from 'react';
+import { MainLayout } from '../../layouts/MainLayout';
 import { InboxOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/es/upload';
+import { useAddTransportApplicationMutation } from './transportApplicationSlice';
 
-const CreateTransportApplicationPage: React.FC = () => {
+const CreateTransportApplicationPage: VFC = () => {
+  const [addTransportApplication] = useAddTransportApplicationMutation();
+
   const onChange = async ({ file }: UploadChangeParam) => {
     if (file.status !== 'done') return;
 
     const publicId: string = file.response.public_id;
-    const response = await fetch('/transport-application', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ publicId }),
-    });
-
-    if (!response.ok || !response.json) {
+    try {
+      await addTransportApplication({ driverId: 1, publicId }).unwrap();
+      message.success('Successfully uploaded transport application.');
+    } catch (e) {
       message.error('Failed to save transport application document.');
-      return;
     }
-    message.success('Successfully uploaded transport application.');
   };
 
   return (
     <MainLayout>
-      <h1>Upload document for your transport application:</h1>
+      <Typography.Title level={2}>
+        Upload document for your transport application:
+      </Typography.Title>
       <Upload.Dragger
         onChange={onChange}
         accept={'.pdf'}

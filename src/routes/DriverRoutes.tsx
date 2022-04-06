@@ -5,9 +5,7 @@ import { Loading } from '../components/loading';
 
 const CreateTransportApplicationPage = lazy(
   () =>
-    import(
-      '../pages/driver/create-driver-application/CreateTransportApplicationPage'
-    ),
+    import('../features/transport-applications/CreateTransportApplicationPage'),
 );
 
 export const DriverRoutes: React.FC = () => (
