@@ -1,13 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
 import React, { lazy, Suspense } from 'react';
-import { Loading } from '../features/shared/loading';
+import { Loading } from '../shared/loading';
 import { AppRoutes } from './routes.enum';
 
-const CreateOrderPage = lazy(
-  () => import('../features/orders/CreateOrderPage'),
-);
+const CreateOrderPage = lazy(() => import('../orders/CreateOrderPage'));
 
-export const CustomerRoutes: React.FC = () => (
+export const CustomerRoutes = () => (
   <Routes>
     <Route
       path={`${AppRoutes.CUSTOMER}/${AppRoutes.CREATE_ORDER}`}

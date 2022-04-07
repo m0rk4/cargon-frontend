@@ -1,15 +1,15 @@
 import { Route, Routes } from 'react-router-dom';
 import React, { lazy, Suspense } from 'react';
-import { Loading } from '../features/shared/loading';
+import { Loading } from '../shared/loading';
 import { AppRoutes } from './routes.enum';
 
-const UsersPage = lazy(() => import('../pages/users/managemnt/UsersPage'));
-const OrdersPage = lazy(() => import('../features/orders/PendingOrdersPage'));
+const UsersPage = lazy(() => import('../users/UsersPage'));
+const OrdersPage = lazy(() => import('../orders/PendingOrdersPage'));
 const TransportApplicationsPage = lazy(
-  () => import('../features/transport-applications/TransportApplicationsPage'),
+  () => import('../transport-applications/TransportApplicationsPage'),
 );
 
-export const ManagementRoutes: React.FC = () => (
+export const ManagementRoutes = () => (
   <Routes>
     <Route
       path={`${AppRoutes.MANAGEMENT}/${AppRoutes.USERS}`}

@@ -1,4 +1,4 @@
-import React, { useMemo, VFC } from 'react';
+import React, { useMemo } from 'react';
 import {
   Button,
   Form,
@@ -32,7 +32,7 @@ type CreateLocationFormProps = {
   cities: City[];
 };
 
-const CreateLocationForm: VFC<CreateLocationFormProps> = ({
+const CreateLocationForm = ({
   streets,
   cities,
   next,
@@ -40,7 +40,7 @@ const CreateLocationForm: VFC<CreateLocationFormProps> = ({
   setToLocation,
   fromLocation,
   toLocation,
-}) => {
+}: CreateLocationFormProps) => {
   const formRef = React.createRef<FormInstance>();
   const formValues = useMemo<CreateLocationFormState>(
     () => ({

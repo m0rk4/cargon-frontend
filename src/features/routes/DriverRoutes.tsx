@@ -1,14 +1,13 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AppRoutes } from './routes.enum';
-import { Loading } from '../features/shared/loading';
+import { Loading } from '../shared/loading';
 
 const CreateTransportApplicationPage = lazy(
-  () =>
-    import('../features/transport-applications/CreateTransportApplicationPage'),
+  () => import('../transport-applications/CreateTransportApplicationPage'),
 );
 
-export const DriverRoutes: React.FC = () => (
+export const DriverRoutes = () => (
   <Routes>
     <Route
       path={`${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`}

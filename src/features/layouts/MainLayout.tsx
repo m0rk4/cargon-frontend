@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import './MainLayout.css';
-import logo from '../logo.svg';
-import { Layout, Menu, PageHeader } from 'antd';
+import logo from '../../logo.svg';
+import { Layout, Menu, PageHeader, Typography } from 'antd';
 import {
   ApartmentOutlined,
   AuditOutlined,
@@ -31,9 +31,7 @@ const URL_TO_MENU_MAP = new Map<string, [string, string]>([
   [AppRoutes.NOT_EXISTING_ROUTE, ['', '']],
 ]);
 
-export const MainLayout: React.FC<{ children: ReactNode }> = (props: {
-  children: ReactNode;
-}) => {
+export const MainLayout = ({ children }: { children: ReactNode }) => {
   const { Header, Content, Footer, Sider } = Layout;
 
   const navigate = useNavigate();
@@ -120,46 +118,48 @@ export const MainLayout: React.FC<{ children: ReactNode }> = (props: {
             className="site-layout-background"
             style={{
               padding: 24,
-              minHeight: 'calc(100vh - 160px)',
+              minHeight: 'calc(100vh - 175px)',
             }}
           >
-            {props.children}
+            {children}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          Cargon ©{new Date().getFullYear()} Created by
-          {
-            <a
-              target={'_blank'}
-              href={'https://github.com/m0rk4'}
-              rel="noreferrer"
-            >
-              {' '}
-              m0rk4
-            </a>
-          }
-          ,
-          {
-            <a
-              target={'_blank'}
-              href={'https://github.com/newvlad2001'}
-              rel="noreferrer"
-            >
-              {' '}
-              newvlad2001
-            </a>
-          }
-          ,
-          {
-            <a
-              target={'_blank'}
-              href={'https://github.com/FIFA-legend'}
-              rel="noreferrer"
-            >
-              {' '}
-              FIFA-legend
-            </a>
-          }
+          <Typography.Title level={4} code={true}>
+            Cargon ©{new Date().getFullYear()} Created by
+            {
+              <a
+                target={'_blank'}
+                href={'https://github.com/m0rk4'}
+                rel="noreferrer"
+              >
+                {' '}
+                m0rk4
+              </a>
+            }
+            ,
+            {
+              <a
+                target={'_blank'}
+                href={'https://github.com/newvlad2001'}
+                rel="noreferrer"
+              >
+                {' '}
+                newvlad2001
+              </a>
+            }
+            ,
+            {
+              <a
+                target={'_blank'}
+                href={'https://github.com/FIFA-legend'}
+                rel="noreferrer"
+              >
+                {' '}
+                FIFA-legend
+              </a>
+            }
+          </Typography.Title>
         </Footer>
       </Layout>
     </Layout>

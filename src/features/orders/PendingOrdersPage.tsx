@@ -1,9 +1,9 @@
-import React, { useMemo, VFC } from 'react';
-import { MainLayout } from '../../layouts/MainLayout';
+import React, { VFC } from 'react';
+import { MainLayout } from '../layouts/MainLayout';
 import { message, Table, Typography } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { GeoLocation } from './models/location.interface';
-import { User } from '../../pages/users/managemnt/models/user.interface';
+import { User } from '../users/models/user.interface';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import {
   useApproveOrderMutation,
@@ -11,9 +11,11 @@ import {
   useGetPendingOrdersQuery,
 } from './ordersSlice';
 import { formatDistanceToNow } from 'date-fns';
-import { openNotification } from '../../util/notification';
+import { openNotification } from '../util/notification';
 import ApproveAndDeclineActions from '../shared/approve-and-decline-actions/ApproveAndDeclineActions';
 import UserLink from '../shared/user-link/UserLink';
+import useSortedByTime from '../hooks/useSortedByTime';
+import { Order } from './models/order.interface';
 
 const PendingOrdersPage: VFC = () => {
   const { data: orders = [], isFetching, isError } = useGetPendingOrdersQuery();
@@ -104,16 +106,9 @@ const PendingOrdersPage: VFC = () => {
 
   const isTableLoading = isFetching || isApproving || isDeclining;
 
-  const sortedOrders = useMemo(
-    () =>
-      orders
-        .slice()
-        .sort(
-          (firstOrder, secondOrder) =>
-            new Date(secondOrder.updatedAt).getTime() -
-            new Date(firstOrder.updatedAt).getTime(),
-        ),
-    [orders],
+  const sortedOrders = useSortedByTime<Order>(
+    orders,
+    (order) => new Date(order.updatedAt),
   );
 
   return (

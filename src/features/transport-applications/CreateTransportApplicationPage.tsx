@@ -1,11 +1,11 @@
 import { message, Typography, Upload } from 'antd';
-import React, { VFC } from 'react';
-import { MainLayout } from '../../layouts/MainLayout';
+import React from 'react';
+import { MainLayout } from '../layouts/MainLayout';
 import { InboxOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/es/upload';
 import { useAddTransportApplicationMutation } from './transportApplicationSlice';
 
-const CreateTransportApplicationPage: VFC = () => {
+const CreateTransportApplicationPage = () => {
   const [addTransportApplication] = useAddTransportApplicationMutation();
 
   const onChange = async ({ file }: UploadChangeParam) => {

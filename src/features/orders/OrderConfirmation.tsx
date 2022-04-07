@@ -9,11 +9,11 @@ interface OrderConfirmationProps {
   toLocation: GeoLocation | undefined;
 }
 
-const OrderConfirmation: React.FC<OrderConfirmationProps> = ({
+const OrderConfirmation = ({
   cargos,
   fromLocation,
   toLocation,
-}) => {
+}: OrderConfirmationProps) => {
   const cargoColumns = [
     {
       title: 'Name',

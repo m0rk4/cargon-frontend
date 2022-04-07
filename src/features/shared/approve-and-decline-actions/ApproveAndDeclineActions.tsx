@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React from 'react';
 import { Space } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
@@ -8,11 +8,11 @@ type ApproveAndDeclineActions = {
   onDecline: (id: number) => void;
 };
 
-const ApproveAndDeclineActions: VFC<ApproveAndDeclineActions> = ({
+const ApproveAndDeclineActions = ({
   id,
   onApprove,
   onDecline,
-}) => (
+}: ApproveAndDeclineActions) => (
   <Space size={'large'}>
     <a onClick={() => onApprove(id)}>
       Approve <CheckOutlined />

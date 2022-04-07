@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React from 'react';
 import {
   Button,
   Form,
@@ -17,11 +17,7 @@ type CreateCargoFormProps = {
   cargos: Cargo[];
 };
 
-const CreateCargoForm: VFC<CreateCargoFormProps> = ({
-  next,
-  cargos,
-  setCargos,
-}) => {
+const CreateCargoForm = ({ next, cargos, setCargos }: CreateCargoFormProps) => {
   const onFinish = ({ cargos }: { cargos: Cargo[] }) => {
     if (!cargos?.length) {
       message.warn('Please enter at least one cargo!');

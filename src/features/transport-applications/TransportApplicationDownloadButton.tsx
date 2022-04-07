@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React from 'react';
 import { Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
@@ -7,9 +7,10 @@ type TransportApplicationDownloadButtonProps = {
   onOpenDocument: (documentUid: string) => void;
 };
 
-const TransportApplicationDownloadButton: VFC<
-  TransportApplicationDownloadButtonProps
-> = ({ documentUid, onOpenDocument }) => (
+const TransportApplicationDownloadButton = ({
+  documentUid,
+  onOpenDocument,
+}: TransportApplicationDownloadButtonProps) => (
   <Button
     onClick={() => onOpenDocument(documentUid)}
     type="primary"

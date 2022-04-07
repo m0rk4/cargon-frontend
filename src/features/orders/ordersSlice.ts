@@ -37,7 +37,13 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         body: order,
       }),
       invalidatesTags: (result, error) =>
-        error ? [] : [{ type: 'Order' as const, id: 'LIST' }],
+        error
+          ? []
+          : [
+              { type: 'Order' as const, id: 'LIST' },
+              { type: 'Street' as const },
+              { type: 'City' as const },
+            ],
     }),
   }),
 });

@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
-import { MainLayout } from '../../layouts/MainLayout';
+import React from 'react';
+import { MainLayout } from '../layouts/MainLayout';
 import { message, Table, Typography } from 'antd';
-import { User } from '../../pages/users/managemnt/models/user.interface';
+import { User } from '../users/models/user.interface';
 import { CheckOutlined } from '@ant-design/icons';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import {
@@ -12,9 +12,11 @@ import {
 } from './transportApplicationSlice';
 import ApproveAndDeclineActions from '../shared/approve-and-decline-actions/ApproveAndDeclineActions';
 import TransportApplicationDownloadButton from './TransportApplicationDownloadButton';
-import { openNotification } from '../../util/notification';
+import { openNotification } from '../util/notification';
 import { formatDistanceToNow } from 'date-fns';
 import UserLink from '../shared/user-link/UserLink';
+import useSortedByTime from '../hooks/useSortedByTime';
+import { TransportApplication } from './models/transport-application.interface';
 
 const TransportApplicationsPage = () => {
   const {
@@ -113,16 +115,9 @@ const TransportApplicationsPage = () => {
   const isTableLoading =
     isFetching || isApproving || isDeclining || isDocumentFetching;
 
-  const sortedApplications = useMemo(
-    () =>
-      applications
-        .slice()
-        .sort(
-          (firstApplication, secondApplication) =>
-            new Date(secondApplication.createdAt).getTime() -
-            new Date(firstApplication.createdAt).getTime(),
-        ),
-    [applications],
+  const sortedApplications = useSortedByTime<TransportApplication>(
+    applications,
+    (application) => new Date(application.createdAt),
   );
 
   return (
