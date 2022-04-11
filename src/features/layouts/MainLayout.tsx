@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import './MainLayout.css';
 import logo from '../../logo.svg';
-import { Layout, Menu, PageHeader, Typography } from 'antd';
+import { Divider, Layout, Menu, PageHeader } from 'antd';
 import {
   ApartmentOutlined,
   AuditOutlined,
@@ -13,6 +13,7 @@ import {
   ToolOutlined,
   UnorderedListOutlined,
   UserOutlined,
+  GithubOutlined,
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -132,48 +133,47 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
             className="site-layout-background"
             style={{
               padding: 24,
-              minHeight: 'calc(100vh - 175px)',
+              minHeight: 'calc(100vh - 212px)',
             }}
           >
             {children}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          <Typography.Title level={4} code={true}>
-            Cargon ©{new Date().getFullYear()} Created by
-            {
-              <a
-                target={'_blank'}
-                href={'https://github.com/m0rk4'}
-                rel="noreferrer"
-              >
-                {' '}
-                m0rk4
-              </a>
-            }
-            ,
-            {
-              <a
-                target={'_blank'}
-                href={'https://github.com/newvlad2001'}
-                rel="noreferrer"
-              >
-                {' '}
-                newvlad2001
-              </a>
-            }
-            ,
-            {
-              <a
-                target={'_blank'}
-                href={'https://github.com/FIFA-legend'}
-                rel="noreferrer"
-              >
-                {' '}
-                FIFA-legend
-              </a>
-            }
-          </Typography.Title>
+          <Divider plain>Cargon © {new Date().getFullYear()}</Divider>
+          <GithubOutlined />
+          {
+            <a
+              target={'_blank'}
+              href={'https://github.com/m0rk4'}
+              rel="noreferrer"
+            >
+              {' '}
+              m0rk4
+            </a>
+          }
+          ,
+          {
+            <a
+              target={'_blank'}
+              href={'https://github.com/newvlad2001'}
+              rel="noreferrer"
+            >
+              {' '}
+              newvlad2001
+            </a>
+          }
+          ,
+          {
+            <a
+              target={'_blank'}
+              href={'https://github.com/FIFA-legend'}
+              rel="noreferrer"
+            >
+              {' '}
+              FIFA-legend
+            </a>
+          }
         </Footer>
       </Layout>
     </Layout>
