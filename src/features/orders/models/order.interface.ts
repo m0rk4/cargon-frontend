@@ -1,6 +1,7 @@
 import { User } from '../../users/models/user.interface';
 import { OrderStatus } from './order-status.interface';
 import { GeoLocation } from './location.interface';
+import { Cargo } from './cargo.interface';
 
 export interface Order {
   id: number;
@@ -10,4 +11,5 @@ export interface Order {
   fromLocation: GeoLocation;
   toLocation: GeoLocation;
   status: OrderStatus;
+  cargos: Cargo[];
 }

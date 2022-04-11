@@ -4,6 +4,7 @@ import { Loading } from '../shared/loading';
 import { AppRoutes } from './routes.enum';
 
 const CreateOrderPage = lazy(() => import('../orders/CreateOrderPage'));
+const OrdersHistoryPage = lazy(() => import('../orders/OrdersHistoryPage'));
 
 export const CustomerRoutes = () => (
   <Routes>
@@ -12,6 +13,14 @@ export const CustomerRoutes = () => (
       element={
         <Suspense fallback={<Loading />}>
           <CreateOrderPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path={`${AppRoutes.CUSTOMER}/${AppRoutes.ORDERS_HISTORY}`}
+      element={
+        <Suspense fallback={<Loading />}>
+          <OrdersHistoryPage />
         </Suspense>
       }
     />

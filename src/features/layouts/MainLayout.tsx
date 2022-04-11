@@ -11,6 +11,7 @@ import {
   ShoppingCartOutlined,
   ToolOutlined,
   UserOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ const URL_TO_MENU_MAP = new Map<string, [string, string]>([
     ['sub1', 'sub1-3'],
   ],
   [`${AppRoutes.CUSTOMER}/${AppRoutes.CREATE_ORDER}`, ['sub2', 'sub2-1']],
+  [`${AppRoutes.CUSTOMER}/${AppRoutes.ORDERS_HISTORY}`, ['sub2', 'sub2-2']],
   [
     `${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`,
     ['sub3', 'sub3-1'],
@@ -87,6 +89,11 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
             <Menu.Item icon={<PlusCircleOutlined />} key="sub2-1">
               <Link to={`/${AppRoutes.CUSTOMER}/${AppRoutes.CREATE_ORDER}`}>
                 Create Order
+              </Link>
+            </Menu.Item>
+            <Menu.Item icon={<UnorderedListOutlined />} key="sub2-2">
+              <Link to={`/${AppRoutes.CUSTOMER}/${AppRoutes.ORDERS_HISTORY}`}>
+                Orders History
               </Link>
             </Menu.Item>
           </SubMenu>

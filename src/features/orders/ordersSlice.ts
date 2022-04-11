@@ -14,6 +14,15 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         })),
       ],
     }),
+    getUserOrders: builder.query<Order[], number>({
+      query: (id) => `/order/user-orders/${id}`,
+      providesTags: (result = []) => [
+        ...result.map(({ id }) => ({
+          type: 'Order' as const,
+          id,
+        })),
+      ],
+    }),
     approveOrder: builder.mutation<Order, number>({
       query: (id) => ({
         url: `/order/${id}/approve`,
@@ -50,6 +59,7 @@ const extendedApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPendingOrdersQuery,
+  useGetUserOrdersQuery,
   useApproveOrderMutation,
   useDeclineOrderMutation,
   useCreateOrderMutation,
