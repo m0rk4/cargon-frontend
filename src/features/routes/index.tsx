@@ -30,6 +30,9 @@ const ApprovedOrdersPage = lazy(() => import('../orders/ApprovedOrdersPage'));
  * For common use
  */
 const NotFoundPage = lazy(() => import('../shared/not-found/NotFoundPage'));
+const ServerErrorPage = lazy(
+  () => import('../shared/server-error/ServerErrorPage'),
+);
 
 export const IndexRoutes: VFC = () => (
   <Routes>
@@ -86,6 +89,14 @@ export const IndexRoutes: VFC = () => (
       element={
         <Suspense fallback={<Loading />}>
           <ApprovedOrdersPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/server-error"
+      element={
+        <Suspense fallback={<Loading />}>
+          <ServerErrorPage />
         </Suspense>
       }
     />

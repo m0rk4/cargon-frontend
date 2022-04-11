@@ -1,12 +1,13 @@
 import React, { VFC } from 'react';
 import './App.css';
 import { IndexRoutes } from './features/routes';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HistoryRouter } from './features/shared/history-router/HistoryRouter';
+import { history } from './features/util/history';
 
 const App: VFC = () => (
-  <Router>
+  <HistoryRouter history={history}>
     <IndexRoutes />
-  </Router>
+  </HistoryRouter>
 );
 
 export default App;
