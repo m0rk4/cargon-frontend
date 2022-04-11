@@ -13,6 +13,7 @@ import {
   CheckOutlined,
   CloseOutlined,
   ImportOutlined,
+  BookOutlined,
 } from '@ant-design/icons';
 
 type OrdersTableProps = {
@@ -23,6 +24,7 @@ type OrdersTableProps = {
   onApprove?: (id: number) => void;
   onDecline?: (id: number) => void;
   onOpen?: (id: number) => void;
+  onBook?: (id: number) => void;
 };
 
 export default function OrdersTable({
@@ -33,6 +35,7 @@ export default function OrdersTable({
   onApprove,
   onDecline,
   onOpen,
+  onBook,
 }: OrdersTableProps) {
   const sortedOrders = useSortedByTime<Order>(
     orders,
@@ -61,6 +64,11 @@ export default function OrdersTable({
         {onOpen && (
           <a onClick={() => onOpen(id)}>
             Open <ImportOutlined />
+          </a>
+        )}
+        {onBook && (
+          <a onClick={() => onBook(id)}>
+            Book <BookOutlined />
           </a>
         )}
       </Space>

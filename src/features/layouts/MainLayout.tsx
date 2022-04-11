@@ -6,12 +6,13 @@ import {
   ApartmentOutlined,
   AuditOutlined,
   CarOutlined,
+  MoneyCollectOutlined,
   PlusCircleOutlined,
   ProfileOutlined,
   ShoppingCartOutlined,
   ToolOutlined,
-  UserOutlined,
   UnorderedListOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -30,6 +31,7 @@ const URL_TO_MENU_MAP = new Map<string, [string, string]>([
     `${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`,
     ['sub3', 'sub3-1'],
   ],
+  [`${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`, ['sub3', 'sub3-2']],
   [AppRoutes.NOT_EXISTING_ROUTE, ['', '']],
 ]);
 
@@ -103,6 +105,11 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
                 to={`/${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`}
               >
                 Create Transport
+              </Link>
+            </Menu.Item>
+            <Menu.Item icon={<MoneyCollectOutlined />} key="sub3-2">
+              <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`}>
+                Book Order
               </Link>
             </Menu.Item>
           </SubMenu>

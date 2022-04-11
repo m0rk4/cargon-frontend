@@ -3,6 +3,7 @@ export enum AppRoutes {
   CREATE_TRANSPORT_APPLICATION = 'create-transport-application',
   CREATE_ORDER = 'create-order',
   ORDERS_HISTORY = 'order-history',
+  APPROVED_ORDERS = 'approved-orders',
   CUSTOMER = 'customer',
   MANAGEMENT = 'management',
   ORDERS = 'orders',
@@ -21,4 +22,5 @@ export const AllAppRoutes: string[] = [
   `${AppRoutes.CUSTOMER}/${AppRoutes.CREATE_ORDER}`,
   `${AppRoutes.CUSTOMER}/${AppRoutes.ORDERS_HISTORY}`,
   `${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`,
+  `${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`,
 ];

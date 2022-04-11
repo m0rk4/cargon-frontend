@@ -10,8 +10,10 @@ import OrdersTable from './OrdersTable';
 import { openNotification } from '../util/notification';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const PendingOrdersPage: VFC = () => {
+  const navigate = useNavigate();
   const { data: orders = [], isFetching, isError } = useGetPendingOrdersQuery();
   const [approveOrder, { isLoading: isApproving }] = useApproveOrderMutation();
   const [declineOrder, { isLoading: isDeclining }] = useDeclineOrderMutation();
@@ -42,6 +44,10 @@ const PendingOrdersPage: VFC = () => {
     }
   };
 
+  const onOpen = (id: number) => {
+    navigate(`/order/${id}`);
+  };
+
   const isTableLoading = isFetching || isApproving || isDeclining;
 
   return (
@@ -53,6 +59,7 @@ const PendingOrdersPage: VFC = () => {
         isError={isError}
         onApprove={onApprove}
         onDecline={onDecline}
+        onOpen={onOpen}
       />
       {isError && <NetworkErrorResult />}
     </MainLayout>

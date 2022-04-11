@@ -4,6 +4,6 @@ import { MainLayout } from '../../layouts/MainLayout';
 
 export const Loading: VFC = () => (
   <MainLayout>
-    <Spin />
+    <Spin size={'large'} />
   </MainLayout>
 );

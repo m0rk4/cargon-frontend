@@ -7,6 +7,8 @@ const CreateTransportApplicationPage = lazy(
   () => import('../transport-applications/CreateTransportApplicationPage'),
 );
 
+const ApprovedOrdersPage = lazy(() => import('../orders/ApprovedOrdersPage'));
+
 export const DriverRoutes = () => (
   <Routes>
     <Route
@@ -14,6 +16,14 @@ export const DriverRoutes = () => (
       element={
         <Suspense fallback={<Loading />}>
           <CreateTransportApplicationPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path={`${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`}
+      element={
+        <Suspense fallback={<Loading />}>
+          <ApprovedOrdersPage />
         </Suspense>
       }
     />

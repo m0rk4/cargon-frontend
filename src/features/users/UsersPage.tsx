@@ -1,7 +1,7 @@
 import { MainLayout } from '../layouts/MainLayout';
 
 import React, { VFC } from 'react';
-import { message, Table, Tag, Typography } from 'antd';
+import { message, Switch, Table, Tag, Typography } from 'antd';
 import { User } from './models/user.interface';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import {
@@ -87,10 +87,14 @@ const UsersPage: VFC = () => {
   };
 
   const renderUserActions = ({ id, isActive }: User) => {
-    if (isActive) {
-      return <a onClick={() => onBlock(id)}>Block</a>;
-    }
-    return <a onClick={() => onActivate(id)}>Activate</a>;
+    return (
+      <Switch
+        checkedChildren="Active"
+        unCheckedChildren="Blocked"
+        onChange={(checked) => (checked ? onActivate(id) : onBlock(id))}
+        checked={isActive}
+      />
+    );
   };
 
   const renderApplicationActions = (id: number) => (
