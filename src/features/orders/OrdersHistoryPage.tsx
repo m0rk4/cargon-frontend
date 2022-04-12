@@ -1,9 +1,12 @@
 import { MainLayout } from '../layouts/MainLayout';
-import { useGetUserOrdersQuery } from './ordersSlice';
+import { useDeclineOrderMutation, useGetUserOrdersQuery } from './ordersSlice';
 import OrdersTable from './OrdersTable';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { openNotification } from '../util/notification';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 export default function OrdersHistoryPage() {
   // TODO: remove
@@ -14,19 +17,36 @@ export default function OrdersHistoryPage() {
     isFetching,
     isError,
   } = useGetUserOrdersQuery(userId);
+  const [declineOrder, { isLoading }] = useDeclineOrderMutation();
 
   const onOpen = (id: number) => {
     navigate(`/order/${id}`);
   };
+
+  const onDecline = async (id: number) => {
+    try {
+      await declineOrder(id).unwrap();
+      openNotification(
+        'Order Approval',
+        'Declined successfully!',
+        <CheckCircleOutlined />,
+      );
+    } catch (e) {
+      message.error('Declining failed!');
+    }
+  };
+
+  const isTableLoading = isFetching || isLoading;
 
   return (
     <MainLayout>
       <OrdersTable
         title="Orders History"
         orders={orders}
-        isTableLoading={isFetching}
+        isTableLoading={isTableLoading}
         isError={isError}
         onOpen={onOpen}
+        onDecline={onDecline}
       />
       {isError && <NetworkErrorResult />}
     </MainLayout>

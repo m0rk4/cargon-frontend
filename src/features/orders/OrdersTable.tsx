@@ -10,10 +10,10 @@ import UserLink from '../shared/user-link/UserLink';
 import { GeoLocation } from './models/location.interface';
 import { formatDistanceToNow } from 'date-fns';
 import {
+  BookOutlined,
   CheckOutlined,
   CloseOutlined,
   ImportOutlined,
-  BookOutlined,
 } from '@ant-design/icons';
 
 type OrdersTableProps = {
@@ -48,7 +48,10 @@ export default function OrdersTable({
     <div>{`${city.name}, ${street.name}, ${home}`}</div>
   );
 
-  const renderAction = (id: number) => {
+  const renderAction = ({ id, status }: Order) => {
+    const isDecliningAvailable =
+      onDecline &&
+      (status === OrderStatus.PENDING || status === OrderStatus.APPROVED);
     return (
       <Space size={'large'}>
         {onApprove && (
@@ -56,7 +59,7 @@ export default function OrdersTable({
             Approve <CheckOutlined />
           </a>
         )}
-        {onDecline && (
+        {isDecliningAvailable && (
           <a onClick={() => onDecline(id)}>
             Decline <CloseOutlined />
           </a>
@@ -124,7 +127,6 @@ export default function OrdersTable({
     {
       title: 'Actions',
       key: 'actions',
-      dataIndex: 'id',
       render: renderAction,
     },
   ];
