@@ -1,5 +1,4 @@
 import React, { VFC } from 'react';
-import { MainLayout } from '../layouts/MainLayout';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import {
   useApproveOrderMutation,
@@ -51,7 +50,7 @@ const PendingOrdersPage: VFC = () => {
   const isTableLoading = isFetching || isApproving || isDeclining;
 
   return (
-    <MainLayout>
+    <>
       <OrdersTable
         title="Pending Orders"
         orders={orders}
@@ -62,7 +61,7 @@ const PendingOrdersPage: VFC = () => {
         onOpen={onOpen}
       />
       {isError && <NetworkErrorResult />}
-    </MainLayout>
+    </>
   );
 };
 

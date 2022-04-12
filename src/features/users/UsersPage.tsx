@@ -1,5 +1,3 @@
-import { MainLayout } from '../layouts/MainLayout';
-
 import React, { VFC } from 'react';
 import { message, Switch, Table, Tag, Typography } from 'antd';
 import { User } from './models/user.interface';
@@ -175,7 +173,7 @@ const UsersPage: VFC = () => {
   );
 
   return (
-    <MainLayout>
+    <>
       <Table
         title={() => (
           <Typography.Title level={2}>Driver Applications</Typography.Title>
@@ -193,7 +191,7 @@ const UsersPage: VFC = () => {
         dataSource={sortedUsers}
       />
       {isUsersError || (isApplicationsError && <NetworkErrorResult />)}
-    </MainLayout>
+    </>
   );
 };
 

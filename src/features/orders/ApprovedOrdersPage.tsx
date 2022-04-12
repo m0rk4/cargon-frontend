@@ -1,4 +1,3 @@
-import { MainLayout } from '../layouts/MainLayout';
 import OrdersTable from './OrdersTable';
 import React from 'react';
 
@@ -23,7 +22,7 @@ export default function ApprovedOrdersPage() {
   };
 
   return (
-    <MainLayout>
+    <>
       <OrdersTable
         title="Available Orders"
         isTableLoading={isFetching}
@@ -33,6 +32,6 @@ export default function ApprovedOrdersPage() {
         onOpen={onOpen}
       />
       {isError && <NetworkErrorResult />}
-    </MainLayout>
+    </>
   );
 }

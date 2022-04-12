@@ -1,4 +1,3 @@
-import { MainLayout } from '../layouts/MainLayout';
 import { useDeclineOrderMutation, useGetUserOrdersQuery } from './ordersSlice';
 import OrdersTable from './OrdersTable';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
@@ -39,7 +38,7 @@ export default function OrdersHistoryPage() {
   const isTableLoading = isFetching || isLoading;
 
   return (
-    <MainLayout>
+    <>
       <OrdersTable
         title="Orders History"
         orders={orders}
@@ -49,6 +48,6 @@ export default function OrdersHistoryPage() {
         onDecline={onDecline}
       />
       {isError && <NetworkErrorResult />}
-    </MainLayout>
+    </>
   );
 }

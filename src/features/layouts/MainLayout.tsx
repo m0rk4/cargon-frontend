@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import './MainLayout.css';
 import logo from '../../logo.svg';
 import { Divider, Layout, Menu, PageHeader } from 'antd';
@@ -6,17 +6,18 @@ import {
   ApartmentOutlined,
   AuditOutlined,
   CarOutlined,
+  GithubOutlined,
   MoneyCollectOutlined,
+  OrderedListOutlined,
   PlusCircleOutlined,
   ProfileOutlined,
   ShoppingCartOutlined,
   ToolOutlined,
   UnorderedListOutlined,
   UserOutlined,
-  GithubOutlined,
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AllAppRoutes, AppRoutes } from '../routes/routes.enum';
 
 const URL_TO_MENU_MAP = new Map<string, [string, string]>([
@@ -32,11 +33,12 @@ const URL_TO_MENU_MAP = new Map<string, [string, string]>([
     `${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`,
     ['sub3', 'sub3-1'],
   ],
+  [`${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`, ['sub3', 'sub3-3']],
   [`${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`, ['sub3', 'sub3-2']],
   [AppRoutes.NOT_EXISTING_ROUTE, ['', '']],
 ]);
 
-export const MainLayout = ({ children }: { children: ReactNode }) => {
+const MainLayout = () => {
   const { Header, Content, Footer, Sider } = Layout;
 
   const navigate = useNavigate();
@@ -113,6 +115,11 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
                 Book Order
               </Link>
             </Menu.Item>
+            <Menu.Item icon={<OrderedListOutlined />} key="sub3-3">
+              <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`}>
+                Driver History
+              </Link>
+            </Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>
@@ -136,7 +143,7 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
               minHeight: 'calc(100vh - 212px)',
             }}
           >
-            {children}
+            <Outlet />
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
@@ -179,3 +186,5 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
     </Layout>
   );
 };
+
+export default MainLayout;

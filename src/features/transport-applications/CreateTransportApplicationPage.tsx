@@ -1,6 +1,5 @@
 import { message, Typography, Upload } from 'antd';
 import React from 'react';
-import { MainLayout } from '../layouts/MainLayout';
 import { InboxOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/es/upload';
 import { useAddTransportApplicationMutation } from './transportApplicationSlice';
@@ -21,7 +20,7 @@ const CreateTransportApplicationPage = () => {
   };
 
   return (
-    <MainLayout>
+    <>
       <Typography.Title level={2}>
         Upload document for your transport application:
       </Typography.Title>
@@ -40,7 +39,7 @@ const CreateTransportApplicationPage = () => {
         </p>
         <p className="ant-upload-hint">Support for a single upload.</p>
       </Upload.Dragger>
-    </MainLayout>
+    </>
   );
 };
 

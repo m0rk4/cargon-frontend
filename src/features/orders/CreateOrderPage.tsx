@@ -1,5 +1,4 @@
 import React, { useState, VFC } from 'react';
-import { MainLayout } from '../layouts/MainLayout';
 import { Button, message, Steps } from 'antd';
 import './CreateOrdersPage.css';
 import CreateCargoForm from './CreateCargoForm';
@@ -55,12 +54,7 @@ const CreateOrderPage: VFC = () => {
 
   if (streetsLoading || citiesLoading || isAdding) return <Loading />;
 
-  if (streetsError || citiesError)
-    return (
-      <MainLayout>
-        <NetworkErrorResult />
-      </MainLayout>
-    );
+  if (streetsError || citiesError) return <NetworkErrorResult />;
 
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
@@ -115,7 +109,7 @@ const CreateOrderPage: VFC = () => {
   };
 
   return (
-    <MainLayout>
+    <>
       <Steps style={{ marginBottom: '40px' }} current={currentStep}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />
@@ -160,7 +154,7 @@ const CreateOrderPage: VFC = () => {
           <Button onClick={() => prevStep()}>Previous</Button>
         )}
       </div>
-    </MainLayout>
+    </>
   );
 };
 

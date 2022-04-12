@@ -1,5 +1,4 @@
 import React from 'react';
-import { MainLayout } from '../layouts/MainLayout';
 import { message, Table, Typography } from 'antd';
 import { User } from '../users/models/user.interface';
 import { CheckOutlined } from '@ant-design/icons';
@@ -121,7 +120,7 @@ const TransportApplicationsPage = () => {
   );
 
   return (
-    <MainLayout>
+    <>
       <Table
         loading={isTableLoading || isError}
         title={() => (
@@ -135,7 +134,7 @@ const TransportApplicationsPage = () => {
         pagination={{ pageSize: 8 }}
       />
       {isError && <NetworkErrorResult />}
-    </MainLayout>
+    </>
   );
 };
 
