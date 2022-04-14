@@ -4,21 +4,21 @@ import { PlusOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
-interface DropDownWithInputProps {
+type DropDownWithInputProps = {
   placeholder: string;
   onChange: (item: string) => void;
   options: string[];
   value?: string | undefined;
   disabled?: boolean;
-}
+};
 
-const DropDownWithInput = ({
+function DropDownWithInput({
   disabled,
   placeholder,
   onChange,
   options,
   value,
-}: DropDownWithInputProps) => {
+}: DropDownWithInputProps) {
   const [items, setItems] = useState<string[]>(options);
   const [name, setName] = useState('');
 
@@ -66,6 +66,6 @@ const DropDownWithInput = ({
       ))}
     </Select>
   );
-};
+}
 
 export default DropDownWithInput;

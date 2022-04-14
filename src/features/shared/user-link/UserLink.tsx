@@ -6,7 +6,7 @@ type UserLinkProps = {
   user: User;
 };
 
-const UserLink = ({ user }: UserLinkProps) => {
+function UserLink({ user }: UserLinkProps) {
   const navigate = useNavigate();
 
   const onLinkClicked = () => {
@@ -14,6 +14,6 @@ const UserLink = ({ user }: UserLinkProps) => {
   };
 
   return <a onClick={onLinkClicked}>{`${user.firstName} ${user.lastName}`}</a>;
-};
+}
 
 export default UserLink;

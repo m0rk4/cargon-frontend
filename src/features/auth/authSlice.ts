@@ -1,67 +1,32 @@
-import { apiSlice } from '../api/apiSlice';
 import { User } from '../users/models/user.interface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { AuthConstants } from './model/auth.constants.enum';
-import { LoginResponse } from './model/login.response.interface';
-import { LoginRequest } from './model/login.request.interface';
-import { SignupRequest } from './model/signup.request.interface';
+import { AuthConstants } from './models/auth.constants.enum';
+import { LoginResponse } from './models/login.response.interface';
+import { emptyAuthState, getAuthInitialState } from '../util/auth';
 
-export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (credentials) => ({
-        url: '/auth/signin',
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
-    register: builder.mutation<void, SignupRequest>({
-      query: (body) => ({
-        url: '/auth/signup',
-        method: 'POST',
-        body,
-      }),
-    }),
-  }),
-});
-
-type AuthState = {
+export type AuthState = {
   user: User | null;
   token: string | null;
   issued: number | null;
   expiresIn: number | null;
-};
-
-//TODO: make it better (e.g. move to reusable service)
-const expired = (issued: number, expiresIn: number): boolean =>
-  Date.now() - issued > expiresIn;
-const existsAndNotExpired =
-  localStorage.getItem(AuthConstants.AUTH_USER_KEY) &&
-  !expired(
-    +localStorage.getItem(AuthConstants.AUTH_ISSUED_KEY)!,
-    +localStorage.getItem(AuthConstants.AUTH_EXPIRES_IN_KEY)!,
-  );
-
-const initialState: AuthState = {
-  user: existsAndNotExpired
-    ? (JSON.parse(localStorage.getItem(AuthConstants.AUTH_USER_KEY)!) as User)
-    : null,
-  token: existsAndNotExpired
-    ? localStorage.getItem(AuthConstants.AUTH_TOKEN_KEY)
-    : null,
-  issued: existsAndNotExpired
-    ? +localStorage.getItem(AuthConstants.AUTH_ISSUED_KEY)!
-    : null,
-  expiresIn: existsAndNotExpired
-    ? +localStorage.getItem(AuthConstants.AUTH_EXPIRES_IN_KEY)!
-    : null,
+  isTokenExpirationPopupVisible?: boolean;
 };
 
 const slice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: getAuthInitialState,
   reducers: {
+    triggerExpirationPopup(state, action: PayloadAction<boolean>) {
+      state.isTokenExpirationPopupVisible = action.payload;
+    },
+    clearCredentials(state) {
+      localStorage.removeItem(AuthConstants.AUTH_USER_KEY);
+      localStorage.removeItem(AuthConstants.AUTH_TOKEN_KEY);
+      localStorage.removeItem(AuthConstants.AUTH_EXPIRES_IN_KEY);
+      localStorage.removeItem(AuthConstants.AUTH_ISSUED_KEY);
+      state = emptyAuthState;
+    },
     setCredentials: (
       state,
       {
@@ -84,10 +49,11 @@ const slice = createSlice({
   },
 });
 
-export const { setCredentials } = slice.actions;
+export const { setCredentials, triggerExpirationPopup, clearCredentials } =
+  slice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-
-export const { useLoginMutation, useRegisterMutation } = extendedApiSlice;
+export const selectIsTokenExpirationPopupVisible = (state: RootState) =>
+  state.auth.isTokenExpirationPopupVisible;
 
 export default slice.reducer;

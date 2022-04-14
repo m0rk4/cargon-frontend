@@ -1,4 +1,4 @@
-import { GeoLocation } from './location.interface';
+import { GeoLocation } from '../../locations/models/location.interface';
 import { Cargo } from './cargo.interface';
 
 export interface CreateOrderDto {

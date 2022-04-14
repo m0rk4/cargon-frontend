@@ -2,7 +2,7 @@ import { Divider, Layout } from 'antd';
 import { GithubOutlined } from '@ant-design/icons';
 import React from 'react';
 
-export default function AppFooter() {
+function AppFooter() {
   return (
     <Layout.Footer style={{ textAlign: 'center' }}>
       <Divider plain>Cargon © {new Date().getFullYear()}</Divider>
@@ -38,3 +38,5 @@ export default function AppFooter() {
     </Layout.Footer>
   );
 }
+
+export default AppFooter;

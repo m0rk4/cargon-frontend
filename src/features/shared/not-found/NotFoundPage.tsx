@@ -2,8 +2,9 @@ import { Button, Result } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function NotFoundPage() {
+function NotFoundPage() {
   const navigate = useNavigate();
+
   const onBackClicked = () => {
     navigate('/');
   };
@@ -21,3 +22,5 @@ export default function NotFoundPage() {
     />
   );
 }
+
+export default NotFoundPage;

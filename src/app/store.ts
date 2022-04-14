@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { apiSlice } from '../features/api/apiSlice';
-import { serverErrorMiddleware } from './error-middleware';
+import { serverErrorMiddleware } from './middleware/error-middleware';
 import authReducer from '../features/auth/authSlice';
 
 export const store = configureStore({

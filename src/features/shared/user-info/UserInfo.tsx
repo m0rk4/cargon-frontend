@@ -9,7 +9,7 @@ type UserInfoProps = {
   user?: User;
 };
 
-export default function UserInfo({ title, user }: UserInfoProps) {
+function UserInfo({ title, user }: UserInfoProps) {
   return (
     <Card
       actions={[
@@ -39,3 +39,5 @@ export default function UserInfo({ title, user }: UserInfoProps) {
     </Card>
   );
 }
+
+export default UserInfo;

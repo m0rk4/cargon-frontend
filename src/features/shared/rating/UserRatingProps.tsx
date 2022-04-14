@@ -7,10 +7,8 @@ type UserRatingProps = {
   onChange?: (value: number) => void;
 };
 
-export default function UserRating({
-  rating,
-  enabled,
-  onChange,
-}: UserRatingProps) {
+function UserRating({ rating, enabled, onChange }: UserRatingProps) {
   return <Rate onChange={onChange} defaultValue={rating} disabled={!enabled} />;
 }
+
+export default UserRating;

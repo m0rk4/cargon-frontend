@@ -3,6 +3,6 @@ export interface DriverApplication {
   firstName: string;
   lastName: string;
   email: string;
-  isApplicationApproved: boolean;
+  phoneNumber: string;
   updatedAt: string;
 }

@@ -1,13 +1,19 @@
-import React, { VFC } from 'react';
+import React from 'react';
 import './App.css';
-import { IndexRoutes } from './features/routes';
-import { HistoryRouter } from './features/shared/history-router/HistoryRouter';
 import { history } from './features/util/history';
+import TokenExpirationPopup from './features/auth/token-expiration-popup/TokenExpirationPopup';
+import HistoryRouter from './features/shared/history-router';
+import IndexRoutes from './features/routes/index-routes';
 
-const App: VFC = () => (
-  <HistoryRouter history={history}>
-    <IndexRoutes />
-  </HistoryRouter>
-);
+function App() {
+  return (
+    <>
+      <TokenExpirationPopup />
+      <HistoryRouter history={history}>
+        <IndexRoutes />
+      </HistoryRouter>
+    </>
+  );
+}
 
 export default App;

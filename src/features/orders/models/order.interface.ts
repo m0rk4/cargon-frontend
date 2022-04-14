@@ -1,6 +1,6 @@
 import { User } from '../../users/models/user.interface';
 import { OrderStatus } from './order-status.interface';
-import { GeoLocation } from './location.interface';
+import { GeoLocation } from '../../locations/models/location.interface';
 import { Cargo } from './cargo.interface';
 
 export interface Order {

@@ -8,19 +8,21 @@ type ApproveAndDeclineActions = {
   onDecline: (id: number) => void;
 };
 
-const ApproveAndDeclineActions = ({
+function ApproveAndDeclineActions({
   id,
   onApprove,
   onDecline,
-}: ApproveAndDeclineActions) => (
-  <Space size={'large'}>
-    <a onClick={() => onApprove(id)}>
-      Approve <CheckOutlined />
-    </a>
-    <a onClick={() => onDecline(id)}>
-      Decline <CloseOutlined />
-    </a>
-  </Space>
-);
+}: ApproveAndDeclineActions) {
+  return (
+    <Space size="large">
+      <a onClick={() => onApprove(id)}>
+        Approve <CheckOutlined />
+      </a>
+      <a onClick={() => onDecline(id)}>
+        Decline <CloseOutlined />
+      </a>
+    </Space>
+  );
+}
 
 export default ApproveAndDeclineActions;
