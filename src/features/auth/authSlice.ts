@@ -5,6 +5,7 @@ import { RootState } from '../../app/store';
 import { AuthConstants } from './model/auth.constants.enum';
 import { LoginResponse } from './model/login.response.interface';
 import { LoginRequest } from './model/login.request.interface';
+import { SignupRequest } from './model/signup.request.interface';
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,6 +14,13 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         url: '/auth/signin',
         method: 'POST',
         body: credentials,
+      }),
+    }),
+    register: builder.mutation<void, SignupRequest>({
+      query: (body) => ({
+        url: '/auth/signup',
+        method: 'POST',
+        body,
       }),
     }),
   }),
@@ -80,6 +88,6 @@ export const { setCredentials } = slice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 
-export const { useLoginMutation } = extendedApiSlice;
+export const { useLoginMutation, useRegisterMutation } = extendedApiSlice;
 
 export default slice.reducer;

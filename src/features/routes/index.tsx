@@ -39,9 +39,11 @@ const ServerErrorPage = lazy(
   () => import('../shared/server-error/ServerErrorPage'),
 );
 const MainLayout = lazy(() => import('../layouts/MainLayout'));
+const UnauthorizedLayout = lazy(() => import('../layouts/UnauthorizedLayout'));
 const OrderPage = lazy(() => import('../orders/OrderPage'));
 const OrderCompletionPage = lazy(() => import('../orders/OrderCompletionPage'));
 const LoginPage = lazy(() => import('../auth/LoginPage'));
+const RegisterPage = lazy(() => import('../auth/RegisterPage'));
 
 export const IndexRoutes: VFC = () => {
   const { user } = useAuth();
@@ -227,14 +229,30 @@ export const IndexRoutes: VFC = () => {
        * - * -> signin
        */}
       <Route
-        path={`/${AppRoutes.SIGN_IN}`}
         element={
           <Suspense fallback={<Loading />}>
-            <LoginPage />
+            <UnauthorizedLayout />
           </Suspense>
         }
-      />
-      <Route path="*" element={<Navigate to={`/${AppRoutes.SIGN_IN}`} />} />
+      >
+        <Route
+          path={`/${AppRoutes.SIGN_IN}`}
+          element={
+            <Suspense fallback={<Loading />}>
+              <LoginPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={`/${AppRoutes.SIGN_UP}`}
+          element={
+            <Suspense fallback={<Loading />}>
+              <RegisterPage />
+            </Suspense>
+          }
+        />
+        <Route path="*" element={<Navigate to={`/${AppRoutes.SIGN_IN}`} />} />
+      </Route>
     </Routes>
   );
 };

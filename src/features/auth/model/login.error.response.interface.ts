@@ -1,4 +1,4 @@
-export interface LoginErrorResponse {
+export interface AuthErrorResponse {
   data: {
     statusCode: number;
     message: string;

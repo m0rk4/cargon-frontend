@@ -6,6 +6,7 @@ export enum AppRoutes {
   APPROVED_ORDERS = 'approved-orders',
   DRIVER_HISTORY = 'driver-history',
   SIGN_IN = 'signin',
+  SIGN_UP = 'signup',
   CUSTOMER = 'customer',
   MANAGEMENT = 'management',
   ORDERS = 'orders',
