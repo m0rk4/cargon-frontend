@@ -2,31 +2,9 @@ import { apiSlice } from '../api/apiSlice';
 import { User } from '../users/models/user.interface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-
-const AUTH_USER_KEY = 'user';
-const AUTH_TOKEN_KEY = 'token';
-const AUTH_ISSUED_KEY = 'issued';
-const AUTH_EXPIRES_IN_KEY = 'expiresIn';
-
-export interface LoginErrorResponse {
-  data: {
-    statusCode: number;
-    message: string;
-    error: string;
-  };
-  status: number;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  user: User;
-  accessToken: string;
-  expiresIn: number;
-}
+import { AuthConstants } from './model/auth.constants.enum';
+import { LoginResponse } from './model/login.response.interface';
+import { LoginRequest } from './model/login.request.interface';
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -51,20 +29,24 @@ type AuthState = {
 const expired = (issued: number, expiresIn: number): boolean =>
   Date.now() - issued > expiresIn;
 const existsAndNotExpired =
-  localStorage.getItem(AUTH_USER_KEY) &&
+  localStorage.getItem(AuthConstants.AUTH_USER_KEY) &&
   !expired(
-    +localStorage.getItem(AUTH_ISSUED_KEY)!,
-    +localStorage.getItem(AUTH_EXPIRES_IN_KEY)!,
+    +localStorage.getItem(AuthConstants.AUTH_ISSUED_KEY)!,
+    +localStorage.getItem(AuthConstants.AUTH_EXPIRES_IN_KEY)!,
   );
 
 const initialState: AuthState = {
   user: existsAndNotExpired
-    ? (JSON.parse(localStorage.getItem(AUTH_USER_KEY)!) as User)
+    ? (JSON.parse(localStorage.getItem(AuthConstants.AUTH_USER_KEY)!) as User)
     : null,
-  token: existsAndNotExpired ? localStorage.getItem(AUTH_TOKEN_KEY) : null,
-  issued: existsAndNotExpired ? +localStorage.getItem(AUTH_ISSUED_KEY)! : null,
+  token: existsAndNotExpired
+    ? localStorage.getItem(AuthConstants.AUTH_TOKEN_KEY)
+    : null,
+  issued: existsAndNotExpired
+    ? +localStorage.getItem(AuthConstants.AUTH_ISSUED_KEY)!
+    : null,
   expiresIn: existsAndNotExpired
-    ? +localStorage.getItem(AUTH_EXPIRES_IN_KEY)!
+    ? +localStorage.getItem(AuthConstants.AUTH_EXPIRES_IN_KEY)!
     : null,
 };
 
@@ -79,10 +61,13 @@ const slice = createSlice({
       }: PayloadAction<LoginResponse>,
     ) => {
       const issued = Date.now();
-      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
-      localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
-      localStorage.setItem(AUTH_ISSUED_KEY, String(issued));
-      localStorage.setItem(AUTH_EXPIRES_IN_KEY, String(expiresIn));
+      localStorage.setItem(AuthConstants.AUTH_USER_KEY, JSON.stringify(user));
+      localStorage.setItem(AuthConstants.AUTH_TOKEN_KEY, accessToken);
+      localStorage.setItem(AuthConstants.AUTH_ISSUED_KEY, String(issued));
+      localStorage.setItem(
+        AuthConstants.AUTH_EXPIRES_IN_KEY,
+        String(expiresIn),
+      );
       state.user = user;
       state.token = accessToken;
       state.issued = issued;
@@ -93,8 +78,8 @@ const slice = createSlice({
 
 export const { setCredentials } = slice.actions;
 
-export default slice.reducer;
-
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 
 export const { useLoginMutation } = extendedApiSlice;
+
+export default slice.reducer;

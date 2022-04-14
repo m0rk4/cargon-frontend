@@ -3,13 +3,10 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 import AppFooter from '../shared/footer/AppFooter';
-import {
-  LoginErrorResponse,
-  LoginRequest,
-  setCredentials,
-  useLoginMutation,
-} from './authSlice';
+import { setCredentials, useLoginMutation } from './authSlice';
 import { useAppDispatch } from '../hooks/store';
+import { LoginRequest } from './model/login.request.interface';
+import { LoginErrorResponse } from './model/login.error.response.interface';
 
 const LoginPage = () => {
   const [login, { isLoading }] = useLoginMutation();
