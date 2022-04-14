@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import { message, Switch, Table, Tag, Typography } from 'antd';
+import { Divider, message, Switch, Table, Tag, Typography } from 'antd';
 import { User } from './models/user.interface';
 import NetworkErrorResult from '../shared/network-error-result/NetworkErrorResult';
 import {
@@ -183,6 +183,7 @@ const UsersPage: VFC = () => {
         pagination={{ pageSize: 5 }}
         dataSource={sortedApplications}
       />
+      <Divider />
       <Table
         title={() => <Typography.Title level={2}>Users</Typography.Title>}
         loading={isUsersError || isUserTableLoading}

@@ -8,6 +8,7 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   user: User;
+  driver?: User;
   fromLocation: GeoLocation;
   toLocation: GeoLocation;
   status: OrderStatus;

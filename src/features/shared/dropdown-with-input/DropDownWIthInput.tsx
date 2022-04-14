@@ -8,14 +8,16 @@ interface DropDownWithInputProps {
   placeholder: string;
   onChange: (item: string) => void;
   options: string[];
-  defaultValue: string | undefined;
+  value?: string | undefined;
+  disabled?: boolean;
 }
 
 const DropDownWithInput = ({
+  disabled,
   placeholder,
   onChange,
   options,
-  defaultValue,
+  value,
 }: DropDownWithInputProps) => {
   const [items, setItems] = useState<string[]>(options);
   const [name, setName] = useState('');
@@ -35,7 +37,8 @@ const DropDownWithInput = ({
 
   return (
     <Select
-      defaultValue={defaultValue}
+      disabled={disabled}
+      value={value}
       onChange={onChange}
       style={{ width: 300 }}
       placeholder={placeholder}

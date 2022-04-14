@@ -18,7 +18,7 @@ export default function ApprovedOrdersPage() {
   };
 
   const onOpen = (id: number) => {
-    navigate(`/order/${id}`);
+    navigate(`/orders/${id}`);
   };
 
   return (

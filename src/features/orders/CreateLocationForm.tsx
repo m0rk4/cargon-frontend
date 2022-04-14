@@ -1,13 +1,16 @@
-import React, { useMemo } from 'react';
+import React, { createRef, useEffect } from 'react';
 import {
   Button,
+  Card,
+  Col,
   Form,
   FormInstance,
   InputNumber,
   message,
+  Row,
   Space,
-  Typography,
 } from 'antd';
+import { HomeFilled } from '@ant-design/icons';
 import DropDownWIthInput from '../shared/dropdown-with-input/DropDownWIthInput';
 import { GeoLocation } from './models/location.interface';
 import { Street } from './models/street.interface';
@@ -23,16 +26,20 @@ interface CreateLocationFormState {
 }
 
 type CreateLocationFormProps = {
-  next: () => void;
+  title?: string;
+  next?: () => void;
   setFromLocation: (val: GeoLocation) => void;
   setToLocation: (val: GeoLocation) => void;
   fromLocation: GeoLocation | undefined;
   toLocation: GeoLocation | undefined;
   streets: Street[];
   cities: City[];
+  disabled?: boolean;
 };
 
 const CreateLocationForm = ({
+  disabled,
+  title,
   streets,
   cities,
   next,
@@ -41,18 +48,18 @@ const CreateLocationForm = ({
   fromLocation,
   toLocation,
 }: CreateLocationFormProps) => {
-  const formRef = React.createRef<FormInstance>();
-  const formValues = useMemo<CreateLocationFormState>(
-    () => ({
+  const formRef = createRef<FormInstance>();
+
+  useEffect(() => {
+    formRef.current?.setFieldsValue({
       streetFrom: fromLocation?.street.name,
       streetTo: toLocation?.street.name,
       cityFrom: fromLocation?.city.name,
       cityTo: toLocation?.city.name,
       homeFrom: fromLocation?.home,
       homeTo: toLocation?.home,
-    }),
-    [],
-  );
+    });
+  }, [fromLocation, toLocation]);
 
   const onStreetChange = (key: 'streetTo' | 'streetFrom', street: string) => {
     formRef.current?.setFieldsValue({ [key]: street });
@@ -88,102 +95,123 @@ const CreateLocationForm = ({
 
     setToLocation(toLocation);
     setFromLocation(fromLocation);
-    next();
+    next && next();
   };
 
   return (
-    <>
-      <Typography.Title level={3}>
-        Please add source and destination locations:
-      </Typography.Title>
-      <Form
-        initialValues={formValues}
-        layout={'vertical'}
-        ref={formRef}
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        onFinish={onFinish}
-        autoComplete="off"
-        style={{ display: 'flex', flexDirection: 'column' }}
-      >
-        <Space>
-          <Form.Item
-            label={'Source'}
-            name="cityFrom"
-            rules={[{ required: true, message: 'Missing source city' }]}
+    <Row style={{ height: '100%' }}>
+      <Col span={24}>
+        <Card title={title} style={{ height: '100%' }}>
+          <Form
+            layout={'vertical'}
+            ref={formRef}
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            onFinish={onFinish}
+            autoComplete="off"
+            style={{ display: 'flex', flexDirection: 'column' }}
           >
-            <DropDownWIthInput
-              onChange={(city) => onCityChange('cityFrom', city)}
-              placeholder="City Name"
-              options={cities.map((city) => city.name)}
-              defaultValue={formValues.cityFrom}
-            />
-          </Form.Item>
+            <Space>
+              <Form.Item
+                label={'Source'}
+                name="cityFrom"
+                rules={[{ required: true, message: 'Missing source city' }]}
+              >
+                <DropDownWIthInput
+                  disabled={disabled}
+                  onChange={(city) => onCityChange('cityFrom', city)}
+                  placeholder="City Name"
+                  options={cities.map((city) => city.name)}
+                />
+              </Form.Item>
 
-          <Form.Item
-            label={'Destination'}
-            name="cityTo"
-            rules={[{ required: true, message: 'Missing destination city' }]}
-          >
-            <DropDownWIthInput
-              onChange={(city) => onCityChange('cityTo', city)}
-              placeholder="City Name"
-              options={cities.map((city) => city.name)}
-              defaultValue={formValues.cityTo}
-            />
-          </Form.Item>
-        </Space>
+              <Form.Item
+                label={'Destination'}
+                name="cityTo"
+                rules={[
+                  { required: true, message: 'Missing destination city' },
+                ]}
+              >
+                <DropDownWIthInput
+                  disabled={disabled}
+                  onChange={(city) => onCityChange('cityTo', city)}
+                  placeholder="City Name"
+                  options={cities.map((city) => city.name)}
+                />
+              </Form.Item>
+            </Space>
 
-        <Space>
-          <Form.Item
-            name="streetFrom"
-            rules={[{ required: true, message: 'Missing source street' }]}
-          >
-            <DropDownWIthInput
-              onChange={(street) => onStreetChange('streetFrom', street)}
-              placeholder="Street Name"
-              options={streets.map((street) => street.name)}
-              defaultValue={formValues.streetFrom}
-            />
-          </Form.Item>
+            <Space>
+              <Form.Item
+                name="streetFrom"
+                rules={[{ required: true, message: 'Missing source street' }]}
+              >
+                <DropDownWIthInput
+                  disabled={disabled}
+                  onChange={(street) => onStreetChange('streetFrom', street)}
+                  placeholder="Street Name"
+                  options={streets.map((street) => street.name)}
+                />
+              </Form.Item>
 
-          <Form.Item
-            name="streetTo"
-            rules={[{ required: true, message: 'Missing destination street!' }]}
-          >
-            <DropDownWIthInput
-              onChange={(street) => onStreetChange('streetTo', street)}
-              placeholder="Street Name"
-              options={streets.map((street) => street.name)}
-              defaultValue={formValues.streetTo}
-            />
-          </Form.Item>
-        </Space>
+              <Form.Item
+                name="streetTo"
+                rules={[
+                  { required: true, message: 'Missing destination street!' },
+                ]}
+              >
+                <DropDownWIthInput
+                  disabled={disabled}
+                  onChange={(street) => onStreetChange('streetTo', street)}
+                  placeholder="Street Name"
+                  options={streets.map((street) => street.name)}
+                />
+              </Form.Item>
+            </Space>
 
-        <Space align={'center'} size={'large'}>
-          <Form.Item
-            name="homeFrom"
-            rules={[{ required: true, message: 'Missing home' }]}
-          >
-            <InputNumber placeholder="Home" min={0} />
-          </Form.Item>
+            <Space align={'center'} size={'large'}>
+              <Form.Item
+                name="homeFrom"
+                rules={[{ required: true, message: 'Missing home' }]}
+              >
+                <InputNumber
+                  disabled={disabled}
+                  style={{ width: 'unset' }}
+                  prefix={<HomeFilled />}
+                  placeholder="From Home"
+                  min={1}
+                />
+              </Form.Item>
 
-          <Form.Item
-            name="homeTo"
-            rules={[{ required: true, message: 'Missing home' }]}
-          >
-            <InputNumber placeholder="Home" min={0} />
-          </Form.Item>
-        </Space>
+              <Form.Item
+                name="homeTo"
+                rules={[{ required: true, message: 'Missing home' }]}
+              >
+                <InputNumber
+                  disabled={disabled}
+                  style={{ width: 'unset' }}
+                  prefix={<HomeFilled />}
+                  placeholder="To Home"
+                  min={1}
+                />
+              </Form.Item>
+            </Space>
 
-        <Form.Item>
-          <Button style={{ marginTop: '5px' }} type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
+            <Form.Item>
+              <Button
+                disabled={disabled}
+                style={{ marginTop: '5px' }}
+                type="primary"
+                htmlType="submit"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 

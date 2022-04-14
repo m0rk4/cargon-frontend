@@ -14,7 +14,7 @@ export default function DriverHistoryPage() {
   } = useGetDriverOrdersQuery(driverId);
 
   const onOpen = (id: number) => {
-    navigate(`/order/${id}`);
+    navigate(`/orders/${id}`);
   };
 
   return (

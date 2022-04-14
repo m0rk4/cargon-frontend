@@ -19,7 +19,7 @@ export default function OrdersHistoryPage() {
   const [declineOrder, { isLoading }] = useDeclineOrderMutation();
 
   const onOpen = (id: number) => {
-    navigate(`/order/${id}`);
+    navigate(`/orders/${id}`);
   };
 
   const onDecline = async (id: number) => {

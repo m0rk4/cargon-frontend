@@ -1,6 +1,7 @@
 import { apiSlice } from '../api/apiSlice';
 import { Order } from './models/order.interface';
 import { CreateOrderDto } from './models/create-order-dto.interface';
+import { BookOrderDto } from './models/book-order-dto.interface';
 
 const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -44,6 +45,11 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         })),
       ],
     }),
+    getOrder: builder.query<Order, number>({
+      query: (id) => `/order/${id}`,
+      providesTags: (result) =>
+        result ? [{ type: 'Order' as const, id: result.id }] : [],
+    }),
     approveOrder: builder.mutation<Order, number>({
       query: (id) => ({
         url: `/order/${id}/approve`,
@@ -59,6 +65,31 @@ const extendedApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) =>
         error ? [] : [{ type: 'Order' as const, id: arg }],
+    }),
+    releaseOrder: builder.mutation<Order, number>({
+      query: (id) => ({
+        url: `/order/${id}/release`,
+        method: 'PUT',
+      }),
+      invalidatesTags: (result, error, arg) =>
+        error ? [] : [{ type: 'Order' as const, id: arg }],
+    }),
+    completeOrder: builder.mutation<Order, number>({
+      query: (id) => ({
+        url: `/order/${id}/release`,
+        method: 'PUT',
+      }),
+      invalidatesTags: (result, error, arg) =>
+        error ? [] : [{ type: 'Order' as const, id: arg }],
+    }),
+    bookOrder: builder.mutation<Order, { dto: BookOrderDto; orderId: number }>({
+      query: ({ orderId, dto }) => ({
+        url: `/order/${orderId}/book`,
+        method: 'PUT',
+        body: dto,
+      }),
+      invalidatesTags: (result, error, { orderId }) =>
+        error ? [] : [{ type: 'Order' as const, id: orderId }],
     }),
     createOrder: builder.mutation<Order, CreateOrderDto>({
       query: (order) => ({
@@ -82,8 +113,12 @@ export const {
   useGetPendingOrdersQuery,
   useGetUserOrdersQuery,
   useGetDriverOrdersQuery,
+  useGetOrderQuery,
   useGetApprovedOrdersQuery,
+  useReleaseOrderMutation,
+  useCompleteOrderMutation,
   useApproveOrderMutation,
   useDeclineOrderMutation,
+  useBookOrderMutation,
   useCreateOrderMutation,
 } = extendedApiSlice;

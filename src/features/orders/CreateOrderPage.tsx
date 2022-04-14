@@ -117,6 +117,7 @@ const CreateOrderPage: VFC = () => {
       </Steps>
       {currentStep === 0 && (
         <CreateCargoForm
+          title="Please Add Order Cargos:"
           cargos={cargos}
           setCargos={(cargos) => setCargos(cargos)}
           next={nextStep}
@@ -124,6 +125,7 @@ const CreateOrderPage: VFC = () => {
       )}
       {currentStep === 1 && (
         <CreateLocationForm
+          title="Please add source and destination locations"
           cities={cities}
           streets={streets}
           next={nextStep}
@@ -151,7 +153,12 @@ const CreateOrderPage: VFC = () => {
           </Button>
         )}
         {currentStep > 0 && (
-          <Button onClick={() => prevStep()}>Previous</Button>
+          <Button
+            style={{ display: 'flex', margin: '20px 0 ' }}
+            onClick={prevStep}
+          >
+            Previous
+          </Button>
         )}
       </div>
     </>

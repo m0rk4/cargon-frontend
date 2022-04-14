@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import './MainLayout.css';
 import logo from '../../logo.svg';
-import { Divider, Layout, Menu, PageHeader } from 'antd';
+import { Layout, Menu, PageHeader } from 'antd';
 import {
   ApartmentOutlined,
   AuditOutlined,
   CarOutlined,
-  GithubOutlined,
   MoneyCollectOutlined,
   OrderedListOutlined,
   PlusCircleOutlined,
@@ -19,6 +18,9 @@ import {
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AllAppRoutes, AppRoutes } from '../routes/routes.enum';
+import AppFooter from '../shared/footer/AppFooter';
+import { useAuth } from '../hooks/useAuth';
+import { UserRole } from '../users/models/user.interface';
 
 const URL_TO_MENU_MAP = new Map<string, [string, string]>([
   [`${AppRoutes.MANAGEMENT}/${AppRoutes.USERS}`, ['sub1', 'sub1-1']],
@@ -39,8 +41,9 @@ const URL_TO_MENU_MAP = new Map<string, [string, string]>([
 ]);
 
 const MainLayout = () => {
-  const { Header, Content, Footer, Sider } = Layout;
+  const { Header, Content, Sider } = Layout;
 
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const currentRoute =
@@ -49,6 +52,8 @@ const MainLayout = () => {
   const [, menuId] = URL_TO_MENU_MAP.get(currentRoute) ?? ['', ''];
 
   const [collapsed, setCollapsed] = useState(false);
+
+  const is = (role: UserRole) => user?.role === role;
 
   return (
     <Layout hasSider>
@@ -71,56 +76,62 @@ const MainLayout = () => {
           mode="inline"
           defaultSelectedKeys={[menuId]}
         >
-          <SubMenu key="sub1" icon={<ToolOutlined />} title="Management">
-            <Menu.Item icon={<UserOutlined />} key="sub1-1">
-              <Link to={`/${AppRoutes.MANAGEMENT}/${AppRoutes.USERS}`}>
-                Users
-              </Link>
-            </Menu.Item>
-            <Menu.Item icon={<ShoppingCartOutlined />} key="sub1-2">
-              <Link to={`/${AppRoutes.MANAGEMENT}/${AppRoutes.ORDERS}`}>
-                Orders
-              </Link>
-            </Menu.Item>
-            <Menu.Item icon={<AuditOutlined />} key="sub1-3">
-              <Link
-                to={`/${AppRoutes.MANAGEMENT}/${AppRoutes.TRANSPORT_APPLICATIONS}`}
-              >
-                Applications
-              </Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" icon={<ProfileOutlined />} title="Customer">
-            <Menu.Item icon={<PlusCircleOutlined />} key="sub2-1">
-              <Link to={`/${AppRoutes.CUSTOMER}/${AppRoutes.CREATE_ORDER}`}>
-                Create Order
-              </Link>
-            </Menu.Item>
-            <Menu.Item icon={<UnorderedListOutlined />} key="sub2-2">
-              <Link to={`/${AppRoutes.CUSTOMER}/${AppRoutes.ORDERS_HISTORY}`}>
-                Orders History
-              </Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub3" icon={<ApartmentOutlined />} title="Driver">
-            <Menu.Item icon={<CarOutlined />} key="sub3-1">
-              <Link
-                to={`/${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`}
-              >
-                Create Transport
-              </Link>
-            </Menu.Item>
-            <Menu.Item icon={<MoneyCollectOutlined />} key="sub3-2">
-              <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`}>
-                Book Order
-              </Link>
-            </Menu.Item>
-            <Menu.Item icon={<OrderedListOutlined />} key="sub3-3">
-              <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`}>
-                Driver History
-              </Link>
-            </Menu.Item>
-          </SubMenu>
+          {(is(UserRole.MANAGER) || is(UserRole.ADMIN)) && (
+            <SubMenu key="sub1" icon={<ToolOutlined />} title="Management">
+              <Menu.Item icon={<UserOutlined />} key="sub1-1">
+                <Link to={`/${AppRoutes.MANAGEMENT}/${AppRoutes.USERS}`}>
+                  Users
+                </Link>
+              </Menu.Item>
+              <Menu.Item icon={<ShoppingCartOutlined />} key="sub1-2">
+                <Link to={`/${AppRoutes.MANAGEMENT}/${AppRoutes.ORDERS}`}>
+                  Orders
+                </Link>
+              </Menu.Item>
+              <Menu.Item icon={<AuditOutlined />} key="sub1-3">
+                <Link
+                  to={`/${AppRoutes.MANAGEMENT}/${AppRoutes.TRANSPORT_APPLICATIONS}`}
+                >
+                  Applications
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+          )}
+          {(is(UserRole.CUSTOMER) || is(UserRole.ADMIN)) && (
+            <SubMenu key="sub2" icon={<ProfileOutlined />} title="Customer">
+              <Menu.Item icon={<PlusCircleOutlined />} key="sub2-1">
+                <Link to={`/${AppRoutes.CUSTOMER}/${AppRoutes.CREATE_ORDER}`}>
+                  Create Order
+                </Link>
+              </Menu.Item>
+              <Menu.Item icon={<UnorderedListOutlined />} key="sub2-2">
+                <Link to={`/${AppRoutes.CUSTOMER}/${AppRoutes.ORDERS_HISTORY}`}>
+                  Orders History
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+          )}
+          {(is(UserRole.DRIVER) || is(UserRole.ADMIN)) && (
+            <SubMenu key="sub3" icon={<ApartmentOutlined />} title="Driver">
+              <Menu.Item icon={<CarOutlined />} key="sub3-1">
+                <Link
+                  to={`/${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`}
+                >
+                  Create Transport
+                </Link>
+              </Menu.Item>
+              <Menu.Item icon={<MoneyCollectOutlined />} key="sub3-2">
+                <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`}>
+                  Book Order
+                </Link>
+              </Menu.Item>
+              <Menu.Item icon={<OrderedListOutlined />} key="sub3-3">
+                <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`}>
+                  Driver History
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+          )}
         </Menu>
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
@@ -137,7 +148,6 @@ const MainLayout = () => {
         </Header>
         <Content style={{ margin: '24px 16px 0 0', overflow: 'initial' }}>
           <div
-            className="site-layout-background"
             style={{
               padding: 24,
               minHeight: 'calc(100vh - 212px)',
@@ -146,42 +156,7 @@ const MainLayout = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          <Divider plain>Cargon © {new Date().getFullYear()}</Divider>
-          <GithubOutlined />
-          {
-            <a
-              target={'_blank'}
-              href={'https://github.com/m0rk4'}
-              rel="noreferrer"
-            >
-              {' '}
-              m0rk4
-            </a>
-          }
-          ,
-          {
-            <a
-              target={'_blank'}
-              href={'https://github.com/newvlad2001'}
-              rel="noreferrer"
-            >
-              {' '}
-              newvlad2001
-            </a>
-          }
-          ,
-          {
-            <a
-              target={'_blank'}
-              href={'https://github.com/FIFA-legend'}
-              rel="noreferrer"
-            >
-              {' '}
-              FIFA-legend
-            </a>
-          }
-        </Footer>
+        <AppFooter />
       </Layout>
     </Layout>
   );

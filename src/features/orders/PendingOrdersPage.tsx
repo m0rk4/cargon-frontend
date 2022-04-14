@@ -44,7 +44,7 @@ const PendingOrdersPage: VFC = () => {
   };
 
   const onOpen = (id: number) => {
-    navigate(`/order/${id}`);
+    navigate(`/orders/${id}`);
   };
 
   const isTableLoading = isFetching || isApproving || isDeclining;
