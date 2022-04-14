@@ -66,7 +66,6 @@ const CreateOrderPage: VFC = () => {
 
   const onProceed = async () => {
     const body: CreateOrderDto = {
-      userId: 1,
       toLocation: {
         home: toLocation!.home,
         street:

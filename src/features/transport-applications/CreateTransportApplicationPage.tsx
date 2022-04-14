@@ -12,7 +12,7 @@ const CreateTransportApplicationPage = () => {
 
     const publicId: string = file.response.public_id;
     try {
-      await addTransportApplication({ driverId: 1, publicId }).unwrap();
+      await addTransportApplication({ publicId }).unwrap();
       message.success('Successfully uploaded transport application.');
     } catch (e) {
       message.error('Failed to save transport application document.');

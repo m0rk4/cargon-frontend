@@ -24,7 +24,7 @@ const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     addTransportApplication: builder.mutation<
       TransportApplication,
-      { driverId: number; publicId: string }
+      { publicId: string }
     >({
       query: (body) => ({
         url: '/transport-application',

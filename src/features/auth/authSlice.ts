@@ -3,8 +3,10 @@ import { User } from '../users/models/user.interface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-const USER_KEY = 'user';
-const TOKEN_KEY = 'token';
+const AUTH_USER_KEY = 'user';
+const AUTH_TOKEN_KEY = 'token';
+const AUTH_ISSUED_KEY = 'issued';
+const AUTH_EXPIRES_IN_KEY = 'expiresIn';
 
 export interface LoginErrorResponse {
   data: {
@@ -22,7 +24,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   user: User;
-  access_token: string;
+  accessToken: string;
+  expiresIn: number;
 }
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
@@ -40,13 +43,29 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 type AuthState = {
   user: User | null;
   token: string | null;
+  issued: number | null;
+  expiresIn: number | null;
 };
 
-const user = localStorage.getItem(USER_KEY);
+//TODO: make it better (e.g. move to reusable service)
+const expired = (issued: number, expiresIn: number): boolean =>
+  Date.now() - issued > expiresIn;
+const existsAndNotExpired =
+  localStorage.getItem(AUTH_USER_KEY) &&
+  !expired(
+    +localStorage.getItem(AUTH_ISSUED_KEY)!,
+    +localStorage.getItem(AUTH_EXPIRES_IN_KEY)!,
+  );
 
 const initialState: AuthState = {
-  user: user ? (JSON.parse(user) as User) : null,
-  token: localStorage.getItem(TOKEN_KEY),
+  user: existsAndNotExpired
+    ? (JSON.parse(localStorage.getItem(AUTH_USER_KEY)!) as User)
+    : null,
+  token: existsAndNotExpired ? localStorage.getItem(AUTH_TOKEN_KEY) : null,
+  issued: existsAndNotExpired ? +localStorage.getItem(AUTH_ISSUED_KEY)! : null,
+  expiresIn: existsAndNotExpired
+    ? +localStorage.getItem(AUTH_EXPIRES_IN_KEY)!
+    : null,
 };
 
 const slice = createSlice({
@@ -55,12 +74,19 @@ const slice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      { payload: { user, access_token } }: PayloadAction<LoginResponse>,
+      {
+        payload: { user, accessToken, expiresIn },
+      }: PayloadAction<LoginResponse>,
     ) => {
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-      localStorage.setItem(TOKEN_KEY, access_token);
+      const issued = Date.now();
+      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+      localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
+      localStorage.setItem(AUTH_ISSUED_KEY, String(issued));
+      localStorage.setItem(AUTH_EXPIRES_IN_KEY, String(expiresIn));
       state.user = user;
-      state.token = access_token;
+      state.token = accessToken;
+      state.issued = issued;
+      state.expiresIn = expiresIn;
     },
   },
 });
