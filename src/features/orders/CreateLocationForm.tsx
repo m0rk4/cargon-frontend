@@ -17,12 +17,12 @@ import { Street } from './models/street.interface';
 import { City } from './models/city.interface';
 
 interface CreateLocationFormState {
-  cityFrom: string | undefined;
-  streetFrom: string | undefined;
-  homeFrom: number | undefined;
-  cityTo: string | undefined;
-  streetTo: string | undefined;
-  homeTo: number | undefined;
+  cityFrom: string;
+  streetFrom: string;
+  homeFrom: number;
+  cityTo: string;
+  streetTo: string;
+  homeTo: number;
 }
 
 type CreateLocationFormProps = {
@@ -71,21 +71,21 @@ const CreateLocationForm = ({
 
   const onFinish = (state: CreateLocationFormState) => {
     const toLocation = {
-      home: state.homeTo!,
+      home: state.homeTo,
       street: {
-        name: state.streetTo!,
+        name: state.streetTo,
       },
       city: {
-        name: state.cityTo!,
+        name: state.cityTo,
       },
     };
     const fromLocation = {
-      home: state.homeFrom!,
+      home: state.homeFrom,
       street: {
-        name: state.streetFrom!,
+        name: state.streetFrom,
       },
       city: {
-        name: state.cityFrom!,
+        name: state.cityFrom,
       },
     };
     if (JSON.stringify(toLocation) === JSON.stringify(fromLocation)) {

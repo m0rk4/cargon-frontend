@@ -32,7 +32,7 @@ export default function OrderPage() {
   const { orderId } = useParams();
   const [fromLocation, setFromLocation] = useState<GeoLocation>();
   const [toLocation, setToLocation] = useState<GeoLocation>();
-  const [cargos = [], setCargos] = useState<Cargo[]>();
+  const [cargos, setCargos] = useState<Cargo[]>();
   const [vehicles = [], setVehicles] = useState<Vehicle[]>();
   const [isModalVisible, setModalVisible] = useState(false);
   const { data: order, isLoading, isError } = useGetOrderQuery(+orderId!);
@@ -47,7 +47,10 @@ export default function OrderPage() {
     useLazyGetDriverVehiclesQuery();
   const navigate = useNavigate();
 
-  if (isLoading) {
+  const actionsLoading =
+    isDeclining || isReleasing || isCompleting || isDriverVehiclesFetching;
+
+  if (isLoading || actionsLoading) {
     return <Loading />;
   }
 
@@ -171,7 +174,7 @@ export default function OrderPage() {
             disabled={!isOrderEditAvailable}
             title="Order Cargos"
             setCargos={setCargos}
-            cargos={order!.cargos}
+            cargos={cargos || order!.cargos}
           />
         </Col>
       </Row>
