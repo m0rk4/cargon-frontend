@@ -3,9 +3,9 @@ import { Vehicle } from './models/vehicle.interface';
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getDriverVehicles: builder.query<Vehicle[], number>({
-      query: (driverId) => `/vehicle/driver/${driverId}`,
-      providesTags: (result = [], error, arg) =>
+    getDriverVehicles: builder.query<Vehicle[], void>({
+      query: () => `/vehicle/driver`,
+      providesTags: (result = [], error) =>
         error ? [] : result.map(({ id }) => ({ type: 'Vehicle' as const, id })),
     }),
   }),

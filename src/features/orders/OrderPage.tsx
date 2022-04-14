@@ -92,9 +92,7 @@ export default function OrderPage() {
 
   const onBookClicked = async () => {
     try {
-      //TODO: driver id;
-      const driverId = 1;
-      const vehicles = await getDriverVehicles(driverId).unwrap();
+      const vehicles = await getDriverVehicles().unwrap();
       setVehicles(vehicles);
       setModalVisible(true);
     } catch (e) {
@@ -104,10 +102,8 @@ export default function OrderPage() {
 
   const onBookSuccessful = async (transportIds: number[]) => {
     try {
-      //TODO: driver id;
-      const driverId = 1;
       await bookOrder({
-        dto: { driverId, transportIds },
+        dto: { transportIds },
         orderId: +orderId!,
       }).unwrap();
       setModalVisible(false);

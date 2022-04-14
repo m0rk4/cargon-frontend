@@ -4,14 +4,8 @@ import { useGetDriverOrdersQuery } from './ordersSlice';
 import { useNavigate } from 'react-router-dom';
 
 export default function DriverHistoryPage() {
-  // TODO: remove
-  const driverId = 1;
   const navigate = useNavigate();
-  const {
-    data: orders = [],
-    isLoading,
-    isError,
-  } = useGetDriverOrdersQuery(driverId);
+  const { data: orders = [], isLoading, isError } = useGetDriverOrdersQuery();
 
   const onOpen = (id: number) => {
     navigate(`/orders/${id}`);

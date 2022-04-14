@@ -8,14 +8,8 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 
 export default function OrdersHistoryPage() {
-  // TODO: remove
-  const userId = 1;
   const navigate = useNavigate();
-  const {
-    data: orders = [],
-    isFetching,
-    isError,
-  } = useGetUserOrdersQuery(userId);
+  const { data: orders = [], isFetching, isError } = useGetUserOrdersQuery();
   const [declineOrder, { isLoading }] = useDeclineOrderMutation();
 
   const onOpen = (id: number) => {

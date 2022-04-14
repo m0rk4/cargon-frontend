@@ -25,8 +25,8 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         })),
       ],
     }),
-    getUserOrders: builder.query<Order[], number>({
-      query: (id) => `/order/user-orders/${id}`,
+    getUserOrders: builder.query<Order[], void>({
+      query: () => `/order/user-orders`,
       providesTags: (result = []) => [
         { type: 'Order' as const, id: 'LIST' },
         ...result.map(({ id }) => ({
@@ -35,8 +35,8 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         })),
       ],
     }),
-    getDriverOrders: builder.query<Order[], number>({
-      query: (id) => `/order/driver-orders/${id}`,
+    getDriverOrders: builder.query<Order[], void>({
+      query: () => `/order/driver-orders`,
       providesTags: (result = []) => [
         { type: 'Order' as const, id: 'LIST' },
         ...result.map(({ id }) => ({
