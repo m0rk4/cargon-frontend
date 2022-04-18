@@ -4,6 +4,7 @@ import React from 'react';
 import { useGetApprovedOrdersQuery } from '../ordersApiSlice';
 import NetworkErrorResult from '../../shared/network-error-result/NetworkErrorResult';
 import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../../routes/models/routes.enum';
 
 function ApprovedOrdersPage() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function ApprovedOrdersPage() {
   } = useGetApprovedOrdersQuery();
 
   const onOpen = (id: number) => {
-    navigate(`/orders/${id}`);
+    navigate(`/${AppRoutes.ORDERS}/${id}`);
   };
 
   return (

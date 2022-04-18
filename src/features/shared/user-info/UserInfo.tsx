@@ -3,6 +3,7 @@ import { Avatar, Card, Descriptions } from 'antd';
 import UserRating from '../rating/UserRatingProps';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AppRoutes } from '../../routes/models/routes.enum';
 
 type UserInfoProps = {
   loading: boolean;
@@ -34,7 +35,7 @@ function UserInfo({ loading, title, user }: UserInfoProps) {
         avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
         description={
           <Link
-            to={`/user/${user?.id}`}
+            to={`/${AppRoutes.USERS}/${user?.id}`}
           >{`${user?.firstName} ${user?.lastName}`}</Link>
         }
       />

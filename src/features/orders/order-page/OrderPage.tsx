@@ -28,6 +28,7 @@ import { OrderStatus } from '../models/order-status.interface';
 import OrderActions from '../order-actions/OrderActions';
 import { useAuth } from '../../hooks/useAuth';
 import NotFoundPage from '../../shared/not-found';
+import { AppRoutes } from '../../routes/models/routes.enum';
 
 function OrderPage() {
   const { user } = useAuth();
@@ -93,7 +94,7 @@ function OrderPage() {
   const onComplete = async () => {
     try {
       await completeOrder(+orderId).unwrap();
-      navigate(`/orders/${orderId}/completion`);
+      navigate(`/${AppRoutes.ORDERS}/${orderId}/${AppRoutes.COMPLETION}`);
     } catch (e) {
       message.error('Completion failed!');
     }

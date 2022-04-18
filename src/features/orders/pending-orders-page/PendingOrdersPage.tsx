@@ -10,6 +10,7 @@ import { openNotification } from '../../util/notification';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../../routes/models/routes.enum';
 
 function PendingOrdersPage() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function PendingOrdersPage() {
   };
 
   const onOpen = (id: number) => {
-    navigate(`/orders/${id}`);
+    navigate(`/${AppRoutes.ORDERS}/${id}`);
   };
 
   const isTableLoading = isFetching || isApproving || isDeclining;

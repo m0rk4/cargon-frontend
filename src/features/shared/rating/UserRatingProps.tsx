@@ -2,7 +2,7 @@ import React from 'react';
 import { Rate } from 'antd';
 
 type UserRatingProps = {
-  rating: number;
+  rating?: number;
   enabled?: boolean;
   onChange?: (value: number) => void;
 };

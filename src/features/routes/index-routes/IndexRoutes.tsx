@@ -69,6 +69,7 @@ const RegisterForm = lazy(
 const LandingPage = lazy(
   () => import('../../landing/landing-page/LandingPage'),
 );
+const UserPage = lazy(() => import('../../users/user-page/UserPage'));
 
 function IndexRoutes() {
   const { user } = useAuth();
@@ -99,6 +100,14 @@ function IndexRoutes() {
           element={
             <Suspense fallback={<Loading />}>
               <HomePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={`/${AppRoutes.USERS}/:userId`}
+          element={
+            <Suspense fallback={<Loading />}>
+              <UserPage />
             </Suspense>
           }
         />
@@ -223,7 +232,7 @@ function IndexRoutes() {
           }
         />
         <Route
-          path={`${AppRoutes.ORDERS}/:orderId/completion`}
+          path={`${AppRoutes.ORDERS}/:orderId/${AppRoutes.COMPLETION}`}
           element={
             <Suspense fallback={<Loading />}>
               <OrderCompletionPage />

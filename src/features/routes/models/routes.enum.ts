@@ -8,6 +8,7 @@ export enum AppRoutes {
   SIGN_IN = 'signin',
   SIGN_UP = 'signup',
   LANDING = 'landing',
+  COMPLETION = 'completion',
   CUSTOMER = 'customer',
   MANAGEMENT = 'management',
   ORDERS = 'orders',

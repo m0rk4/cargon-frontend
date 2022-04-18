@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { openNotification } from '../../util/notification';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { message } from 'antd';
+import { AppRoutes } from '../../routes/models/routes.enum';
 
 function UserOrdersHistoryPage() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function UserOrdersHistoryPage() {
   const [declineOrder, { isLoading }] = useDeclineOrderMutation();
 
   const onOpen = (id: number) => {
-    navigate(`/orders/${id}`);
+    navigate(`/${AppRoutes.ORDERS}/${id}`);
   };
 
   const onDecline = async (id: number) => {
