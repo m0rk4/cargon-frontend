@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { AuthConstants } from './models/auth.constants.enum';
 import { LoginResponse } from './models/login.response.interface';
-import { emptyAuthState, getAuthInitialState } from '../util/auth';
+import { getAuthInitialState } from '../util/auth';
 
 export type AuthState = {
   user: User | null;
@@ -25,7 +25,10 @@ const slice = createSlice({
       localStorage.removeItem(AuthConstants.AUTH_TOKEN_KEY);
       localStorage.removeItem(AuthConstants.AUTH_EXPIRES_IN_KEY);
       localStorage.removeItem(AuthConstants.AUTH_ISSUED_KEY);
-      state = emptyAuthState;
+      state.user = null;
+      state.token = null;
+      state.issued = null;
+      state.expiresIn = null;
     },
     setCredentials: (
       state,

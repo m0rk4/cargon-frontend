@@ -38,4 +38,4 @@ const getAuthInitialState = (): AuthState => {
   };
 };
 
-export { isTimeExpired, getAuthInitialState, emptyAuthState };
+export { isTimeExpired, getAuthInitialState };

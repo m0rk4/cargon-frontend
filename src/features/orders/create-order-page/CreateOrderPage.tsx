@@ -65,28 +65,33 @@ function CreateOrderPage() {
   };
 
   const onProceed = async () => {
+    if (!toLocation || !fromLocation) {
+      message.error("Seems like you haven't specified locations!");
+      return;
+    }
+
     const body: CreateOrderDto = {
       toLocation: {
-        home: toLocation!.home,
+        home: toLocation.home,
         street:
           streets.find(
-            (streetFromDb) => streetFromDb.name === toLocation!.street.name,
-          ) ?? toLocation!.street,
+            (streetFromDb) => streetFromDb.name === toLocation?.street?.name,
+          ) ?? toLocation.street,
         city:
           cities.find(
-            (streetFromDb) => streetFromDb.name === toLocation!.city.name,
-          ) ?? toLocation!.city,
+            (streetFromDb) => streetFromDb.name === toLocation?.city?.name,
+          ) ?? toLocation.city,
       },
       fromLocation: {
-        home: fromLocation!.home,
+        home: fromLocation.home,
         street:
           streets.find(
-            (streetFromDb) => streetFromDb.name === fromLocation?.street.name,
-          ) ?? fromLocation!.street,
+            (streetFromDb) => streetFromDb.name === fromLocation?.street?.name,
+          ) ?? fromLocation.street,
         city:
           cities.find(
-            (streetFromDb) => streetFromDb.name === fromLocation?.city.name,
-          ) ?? fromLocation!.city,
+            (streetFromDb) => streetFromDb.name === fromLocation?.city?.name,
+          ) ?? fromLocation.city,
       },
       cargos,
     };

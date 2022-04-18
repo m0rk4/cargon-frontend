@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './MainLayout.css';
 import logo from '../../../logo.svg';
-import { Layout, Menu, PageHeader } from 'antd';
+import { Button, Layout, Menu, PageHeader, Tag } from 'antd';
 import {
   ApartmentOutlined,
   AuditOutlined,
   CarOutlined,
+  LogoutOutlined,
   MoneyCollectOutlined,
   OrderedListOutlined,
   PlusCircleOutlined,
@@ -24,6 +25,8 @@ import {
 import AppFooter from '../../shared/footer/AppFooter';
 import { useAuth } from '../../hooks/useAuth';
 import { UserRole } from '../../users/models/user.interface';
+import { useAppDispatch } from '../../hooks/store';
+import { clearCredentials } from '../../auth/authSlice';
 
 const URL_TO_MENU_MAP = new Map<string, [string, string]>([
   [`${AppRoutes.MANAGEMENT}/${AppRoutes.USERS}`, ['sub1', 'sub1-1']],
@@ -48,6 +51,7 @@ function MainLayout() {
 
   const { user } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const currentRoute =
     AllAppProtectedRoutes.find((route) => location.pathname.includes(route)) ??
@@ -57,6 +61,11 @@ function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   const is = (role: UserRole) => user?.role === role;
+
+  const onLogout = () => {
+    dispatch(clearCredentials());
+    navigate(`/${AppRoutes.SIGN_IN}`);
+  };
 
   return (
     <Layout hasSider>
@@ -143,10 +152,32 @@ function MainLayout() {
           style={{ padding: 0, marginRight: '16px' }}
         >
           <PageHeader
+            tags={[
+              <Tag key="role" color="success">
+                {user?.role}
+              </Tag>,
+            ]}
+            extra={[
+              <Button
+                key="user"
+                onClick={() => navigate(`/${AppRoutes.USERS}/${user?.id}`)}
+                icon={<UserOutlined />}
+              >
+                Profile
+              </Button>,
+              <Button
+                key="logout"
+                onClick={onLogout}
+                icon={<LogoutOutlined />}
+                type="primary"
+              >
+                Logout
+              </Button>,
+            ]}
             avatar={{ src: 'https://picsum.photos/200' }}
             onBack={() => navigate(-1)}
-            title={'Cargon'}
-            subTitle={'Demo'}
+            title="Cargon"
+            subTitle="Drive your dream!"
           />
         </Header>
         <Content style={{ margin: '24px 16px 0 0', overflow: 'initial' }}>

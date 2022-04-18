@@ -27,6 +27,7 @@ import { Vehicle } from '../../vehicles/models/vehicle.interface';
 import { OrderStatus } from '../models/order-status.interface';
 import OrderActions from '../order-actions/OrderActions';
 import { useAuth } from '../../hooks/useAuth';
+import NotFoundPage from '../../shared/not-found';
 
 function OrderPage() {
   const { user } = useAuth();
@@ -36,7 +37,12 @@ function OrderPage() {
   const [cargos, setCargos] = useState<Cargo[]>();
   const [vehicles = [], setVehicles] = useState<Vehicle[]>();
   const [isModalVisible, setModalVisible] = useState(false);
-  const { data: order, isLoading, isError } = useGetOrderQuery(+orderId!);
+  const navigate = useNavigate();
+  if (!orderId) {
+    return <NotFoundPage />;
+  }
+
+  const { data: order, isLoading, isError } = useGetOrderQuery(+orderId);
   const { data: streets = [] } = useGetStreetsQuery();
   const { data: cities = [] } = useGetCitiesQuery();
   const [declineOrder, { isLoading: isDeclining }] = useDeclineOrderMutation();
@@ -46,7 +52,6 @@ function OrderPage() {
     useCompleteOrderMutation();
   const [getDriverVehicles, { isFetching: isDriverVehiclesFetching }] =
     useLazyGetDriverVehiclesQuery();
-  const navigate = useNavigate();
 
   const actionsLoading =
     isLoading ||
@@ -61,7 +66,7 @@ function OrderPage() {
 
   const onDecline = async () => {
     try {
-      await declineOrder(+orderId!).unwrap();
+      await declineOrder(+orderId).unwrap();
       openNotification(
         'Order Approval',
         'Declined successfully!',
@@ -74,7 +79,7 @@ function OrderPage() {
 
   const onRelease = async () => {
     try {
-      await releaseOrder(+orderId!).unwrap();
+      await releaseOrder(+orderId).unwrap();
       openNotification(
         'Order Release',
         'Released successfully!',
@@ -87,7 +92,7 @@ function OrderPage() {
 
   const onComplete = async () => {
     try {
-      await completeOrder(+orderId!).unwrap();
+      await completeOrder(+orderId).unwrap();
       navigate(`/orders/${orderId}/completion`);
     } catch (e) {
       message.error('Completion failed!');
@@ -108,7 +113,7 @@ function OrderPage() {
     try {
       await bookOrder({
         dto: { transportIds },
-        orderId: +orderId!,
+        orderId: +orderId,
       }).unwrap();
       setModalVisible(false);
       openNotification(
