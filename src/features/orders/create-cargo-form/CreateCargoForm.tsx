@@ -22,18 +22,20 @@ import {
 import { Cargo } from '../models/cargo.interface';
 
 type CreateCargoFormProps = {
+  loading?: boolean;
   title: string;
   next?: () => void;
   setCargos: (cargos: Cargo[]) => void;
-  cargos: Cargo[];
+  cargos?: Cargo[];
   disabled?: boolean;
 };
 
 function CreateCargoForm({
+  loading,
   disabled,
   title,
   next,
-  cargos,
+  cargos = [],
   setCargos,
 }: CreateCargoFormProps) {
   const onFinish = ({ cargos }: { cargos: Cargo[] }) => {
@@ -48,7 +50,7 @@ function CreateCargoForm({
   return (
     <Row style={{ height: '100%' }}>
       <Col span={24}>
-        <Card title={title} style={{ height: '100%' }}>
+        <Card loading={loading} title={title} style={{ height: '100%' }}>
           <Form
             name="dynamic_form_nest_item"
             onFinish={onFinish}

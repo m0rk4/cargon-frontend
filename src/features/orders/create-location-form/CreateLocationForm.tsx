@@ -26,18 +26,20 @@ interface CreateLocationFormState {
 }
 
 type CreateLocationFormProps = {
+  loading?: boolean;
   title?: string;
   next?: () => void;
   setFromLocation: (val: GeoLocation) => void;
   setToLocation: (val: GeoLocation) => void;
-  fromLocation: GeoLocation | undefined;
-  toLocation: GeoLocation | undefined;
+  fromLocation?: GeoLocation;
+  toLocation?: GeoLocation;
   streets: Street[];
   cities: City[];
   disabled?: boolean;
 };
 
 const CreateLocationForm = ({
+  loading,
   disabled,
   title,
   streets,
@@ -101,7 +103,7 @@ const CreateLocationForm = ({
   return (
     <Row style={{ height: '100%' }}>
       <Col span={24}>
-        <Card title={title} style={{ height: '100%' }}>
+        <Card loading={loading} title={title} style={{ height: '100%' }}>
           <Form
             layout={'vertical'}
             ref={formRef}

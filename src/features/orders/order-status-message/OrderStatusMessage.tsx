@@ -3,11 +3,11 @@ import { Alert } from 'antd';
 import React from 'react';
 
 type OrderStatusProps = {
-  status: OrderStatus;
+  status?: OrderStatus;
 };
 
 function OrderStatusMessage({ status }: OrderStatusProps) {
-  const renderStatus = (status: OrderStatus) => {
+  const renderStatus = (status?: OrderStatus) => {
     switch (status) {
       case OrderStatus.PENDING:
         return <Alert message="Pending" type="warning" showIcon />;
@@ -19,6 +19,8 @@ function OrderStatusMessage({ status }: OrderStatusProps) {
         return <Alert message="Completed" type="success" showIcon />;
       case OrderStatus.DECLINED:
         return <Alert message="Declined" type="error" showIcon />;
+      default:
+        return <></>;
     }
   };
 

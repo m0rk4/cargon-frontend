@@ -26,9 +26,10 @@ import { useLazyGetDriverVehiclesQuery } from '../../vehicles/vehiclesApiSlice';
 import { Vehicle } from '../../vehicles/models/vehicle.interface';
 import { OrderStatus } from '../models/order-status.interface';
 import OrderActions from '../order-actions/OrderActions';
-import Loading from '../../shared/loading';
+import { useAuth } from '../../hooks/useAuth';
 
 function OrderPage() {
+  const { user } = useAuth();
   const { orderId } = useParams();
   const [fromLocation, setFromLocation] = useState<GeoLocation>();
   const [toLocation, setToLocation] = useState<GeoLocation>();
@@ -48,11 +49,11 @@ function OrderPage() {
   const navigate = useNavigate();
 
   const actionsLoading =
-    isDeclining || isReleasing || isCompleting || isDriverVehiclesFetching;
-
-  if (isLoading || actionsLoading) {
-    return <Loading />;
-  }
+    isLoading ||
+    isDeclining ||
+    isReleasing ||
+    isCompleting ||
+    isDriverVehiclesFetching;
 
   if (isError) {
     return <NetworkErrorResult />;
@@ -120,8 +121,7 @@ function OrderPage() {
     }
   };
 
-  //TODO: remove user order author
-  const isUserOrderOwner = true;
+  const isUserOrderOwner = user?.id === order?.user?.id;
   const isOrderEditAvailable =
     isUserOrderOwner &&
     (order?.status === OrderStatus.PENDING ||
@@ -141,17 +141,25 @@ function OrderPage() {
           <Typography.Title style={{ display: 'box', margin: 0 }}>
             Order #{orderId}
           </Typography.Title>
-          <OrderStatusMessage status={order!.status} />
+          <OrderStatusMessage status={order?.status} />
         </div>
       </Row>
       <Divider />
       <Row gutter={[8, 16]}>
         <Col span={12}>
-          <UserInfo title="Owner Information" user={order!.user} />
+          <UserInfo
+            loading={actionsLoading}
+            title="Owner Information"
+            user={order?.user}
+          />
         </Col>
         <Col span={12}>
           {order?.driver && (
-            <UserInfo title="Driver Information" user={order.driver} />
+            <UserInfo
+              loading={actionsLoading}
+              title="Driver Information"
+              user={order?.driver}
+            />
           )}
         </Col>
       </Row>
@@ -159,22 +167,24 @@ function OrderPage() {
       <Row gutter={[8, 16]}>
         <Col span={12}>
           <CreateLocationForm
+            loading={actionsLoading}
             disabled={!isOrderEditAvailable}
             title="Order Locations"
             setFromLocation={setFromLocation}
             setToLocation={setToLocation}
-            fromLocation={fromLocation ?? order!.fromLocation}
-            toLocation={toLocation ?? order!.toLocation}
+            fromLocation={fromLocation ?? order?.fromLocation}
+            toLocation={toLocation ?? order?.toLocation}
             streets={streets}
             cities={cities}
           />
         </Col>
         <Col span={12}>
           <CreateCargoForm
+            loading={actionsLoading}
             disabled={!isOrderEditAvailable}
             title="Order Cargos"
             setCargos={setCargos}
-            cargos={cargos || order!.cargos}
+            cargos={cargos || order?.cargos}
           />
         </Col>
       </Row>
@@ -182,6 +192,8 @@ function OrderPage() {
       <Row gutter={[8, 16]}>
         <Col span={12}>
           <OrderActions
+            loading={actionsLoading}
+            order={order}
             onComplete={onComplete}
             onBook={onBookClicked}
             onRelease={onRelease}

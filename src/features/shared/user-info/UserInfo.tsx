@@ -5,13 +5,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 type UserInfoProps = {
+  loading: boolean;
   title: string;
   user?: User;
 };
 
-function UserInfo({ title, user }: UserInfoProps) {
+function UserInfo({ loading, title, user }: UserInfoProps) {
   return (
     <Card
+      loading={loading}
       actions={[
         <Descriptions key="description" bordered>
           <Descriptions.Item label="First Name">
