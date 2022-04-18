@@ -66,6 +66,9 @@ const LoginForm = lazy(() => import('../../auth/login-form/LoginForm'));
 const RegisterForm = lazy(
   () => import('../../auth/register-form/RegisterForm'),
 );
+const LandingPage = lazy(
+  () => import('../../landing/landing-page/LandingPage'),
+);
 
 function IndexRoutes() {
   const { user } = useAuth();
@@ -258,6 +261,14 @@ function IndexRoutes() {
         }
       >
         <Route
+          path={`/${AppRoutes.LANDING}`}
+          element={
+            <Suspense fallback={<Loading />}>
+              <LandingPage />
+            </Suspense>
+          }
+        />
+        <Route
           path={`/${AppRoutes.SIGN_IN}`}
           element={
             <Suspense fallback={<Loading />}>
@@ -273,7 +284,7 @@ function IndexRoutes() {
             </Suspense>
           }
         />
-        <Route path="*" element={<Navigate to={`/${AppRoutes.SIGN_IN}`} />} />
+        <Route path="*" element={<Navigate to={`/${AppRoutes.LANDING}`} />} />
       </Route>
     </Routes>
   );

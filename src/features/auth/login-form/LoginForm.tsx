@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, message } from 'antd';
+import { Button, Card, Col, Form, Input, message, Row } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
@@ -25,50 +25,56 @@ function LoginForm() {
   };
 
   return (
-    <Card title="Sign In to Cargon">
-      <Form
-        name="signin_login"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-      >
-        <Form.Item
-          name="email"
-          rules={[
-            {
-              required: true,
-              type: 'email',
-              message: 'Please input your Email!',
-            },
-          ]}
-        >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button
-            loading={isLoading}
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
+    <Row justify="center" align="middle" style={{ height: '100%' }}>
+      <Col span={8}>
+        <Card title="Sign In to Cargon">
+          <Form
+            name="signin_login"
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
           >
-            Log in
-          </Button>
-        </Form.Item>
-        Or <Link to={`/${AppRoutes.SIGN_UP}`}>register now!</Link>
-      </Form>
-    </Card>
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  type: 'email',
+                  message: 'Please input your Email!',
+                },
+              ]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="Email"
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                { required: true, message: 'Please input your Password!' },
+              ]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                loading={isLoading}
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                Log in
+              </Button>
+            </Form.Item>
+            Or <Link to={`/${AppRoutes.SIGN_UP}`}>register now!</Link>
+          </Form>
+        </Card>
+      </Col>
+    </Row>
   );
 }
 

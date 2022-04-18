@@ -13,6 +13,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         })),
       ],
     }),
+    getCurrentUser: builder.query<User, void>({
+      query: () => '/user/current',
+      providesTags: (result) =>
+        result ? [{ type: 'User' as const, id: result.id }] : [],
+    }),
     blockUser: builder.mutation<User, number>({
       query: (id) => ({
         url: `/user/${id}/block`,
@@ -34,6 +39,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetUsersQuery,
+  useGetCurrentUserQuery,
   useBlockUserMutation,
   useActivateUserMutation,
 } = extendedApiSlice;

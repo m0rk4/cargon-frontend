@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:4200",
   "dependencies": {
+    "@react-spring/parallax": "^9.4.4",
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",

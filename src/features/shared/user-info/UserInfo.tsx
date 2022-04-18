@@ -22,7 +22,7 @@ function UserInfo({ title, user }: UserInfoProps) {
           </Descriptions.Item>
           <Descriptions.Item label="Email">{user?.email}</Descriptions.Item>
           <Descriptions.Item label="Rating">
-            <UserRating rating={+(user?.userRating ?? '0') / 2.0} />
+            <UserRating rating={+(user?.userRating ?? '0')} />
           </Descriptions.Item>
         </Descriptions>,
       ]}

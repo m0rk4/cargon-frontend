@@ -1,9 +1,9 @@
-import { Col, Layout, PageHeader, Row, Tabs } from 'antd';
+import { Layout, PageHeader, Tabs } from 'antd';
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import AppFooter from '../../shared/footer/AppFooter';
 import { HomeFilled } from '@ant-design/icons';
 import { AppRoutes } from '../../routes/models/routes.enum';
+import boats from './boats.jpg';
 
 const { TabPane } = Tabs;
 
@@ -28,18 +28,16 @@ function UnauthorizedLayout() {
           }
         />
       </Layout.Header>
-      <Layout.Content>
-        <Row
-          style={{ minHeight: 'calc(100vh - 190px)' }}
-          align="middle"
-          justify="space-around"
-        >
-          <Col span={8}>
-            <Outlet />
-          </Col>
-        </Row>
+      <Layout.Content
+        style={{
+          height: 'calc(100vh - 105px)',
+          marginTop: '40px',
+          backgroundImage: `url(${boats})`,
+          backgroundSize: 'cover',
+        }}
+      >
+        <Outlet />
       </Layout.Content>
-      <AppFooter />
     </Layout>
   );
 }
