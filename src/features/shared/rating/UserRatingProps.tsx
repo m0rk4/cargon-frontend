@@ -8,7 +8,7 @@ type UserRatingProps = {
 };
 
 function UserRating({ rating, enabled, onChange }: UserRatingProps) {
-  return <Rate onChange={onChange} defaultValue={rating} disabled={!enabled} />;
+  return <Rate onChange={onChange} value={rating} disabled={!enabled} />;
 }
 
 export default UserRating;
