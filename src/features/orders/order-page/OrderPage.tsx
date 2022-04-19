@@ -10,6 +10,7 @@ import {
   useGetOrderQuery,
   useReleaseOrderMutation,
   useUpdateOrderCargosMutation,
+  useUpdateOrderLocationsMutation,
 } from '../ordersApiSlice';
 import NetworkErrorResult from '../../shared/network-error-result/NetworkErrorResult';
 import { CheckCircleOutlined } from '@ant-design/icons';
@@ -31,6 +32,7 @@ import { useAuth } from '../../hooks/useAuth';
 import NotFoundPage from '../../shared/not-found';
 import { AppRoutes } from '../../routes/models/routes.enum';
 import { DeepPartial } from '@reduxjs/toolkit';
+import { UpdateOrderLocations } from '../models/update-order-locations.interface';
 
 function OrderPage() {
   const { user } = useAuth();
@@ -53,6 +55,8 @@ function OrderPage() {
   const [bookOrder, { isLoading: isBooking }] = useBookOrderMutation();
   const [updateOrderCargos, { isLoading: isUpdatingCargos }] =
     useUpdateOrderCargosMutation();
+  const [updateLocations, { isLoading: isUpdatingLocations }] =
+    useUpdateOrderLocationsMutation();
   const [completeOrder, { isLoading: isCompleting }] =
     useCompleteOrderMutation();
   const [getDriverVehicles, { isFetching: isDriverVehiclesFetching }] =
@@ -64,6 +68,7 @@ function OrderPage() {
     isReleasing ||
     isCompleting ||
     isUpdatingCargos ||
+    isUpdatingLocations ||
     isDriverVehiclesFetching;
 
   if (isError) {
@@ -149,10 +154,12 @@ function OrderPage() {
     );
   }, [cargos]);
 
-  const isLocationsChanged = useMemo(
+  const locationsChanged = useMemo(
     () =>
-      JSON.stringify(toLocation) !== JSON.stringify(order?.toLocation) ||
-      JSON.stringify(fromLocation) !== JSON.stringify(order?.fromLocation),
+      toLocation &&
+      fromLocation &&
+      (JSON.stringify(toLocation) !== JSON.stringify(order?.toLocation) ||
+        JSON.stringify(fromLocation) !== JSON.stringify(order?.fromLocation)),
     [toLocation, fromLocation],
   );
 
@@ -167,7 +174,6 @@ function OrderPage() {
   };
 
   const onToLocationChanged = (location: DeepPartial<GeoLocation>) => {
-    console.log(location);
     setToLocation(location);
   };
 
@@ -185,8 +191,48 @@ function OrderPage() {
     }
   };
 
-  const onLocationsSubmitted = () => {
-    console.log({ fromLocation, toLocation });
+  const onLocationsSubmitted = async () => {
+    const requestedFromLocation = fromLocation as GeoLocation;
+    const requestedToLocation = toLocation as GeoLocation;
+
+    const dto: UpdateOrderLocations = {
+      orderId,
+      toLocation: {
+        home: requestedToLocation.home,
+        street:
+          streets.find(
+            (streetFromDb) =>
+              streetFromDb.name === requestedToLocation.street.name,
+          ) ?? requestedToLocation.street,
+        city:
+          cities.find(
+            (streetFromDb) =>
+              streetFromDb.name === requestedToLocation?.city?.name,
+          ) ?? requestedToLocation.city,
+      },
+      fromLocation: {
+        home: requestedFromLocation.home,
+        street:
+          streets.find(
+            (streetFromDb) =>
+              streetFromDb.name === requestedFromLocation?.street?.name,
+          ) ?? requestedFromLocation.street,
+        city:
+          cities.find(
+            (streetFromDb) =>
+              streetFromDb.name === requestedFromLocation?.city?.name,
+          ) ?? requestedFromLocation.city,
+      },
+    };
+
+    try {
+      await updateLocations(dto).unwrap();
+      setFromLocation(undefined);
+      setToLocation(undefined);
+      message.success('Order Locations updated!');
+    } catch (e) {
+      message.error('Failed to update order locations!');
+    }
   };
 
   return (
@@ -228,6 +274,16 @@ function OrderPage() {
       <Divider />
       <Row gutter={[8, 16]}>
         <Col span={12}>
+          <Button
+            disabled={!locationsChanged}
+            onClick={() => {
+              setToLocation(order?.toLocation);
+              setFromLocation(order?.fromLocation);
+            }}
+            type="primary"
+          >
+            Reset To Defaults
+          </Button>
           <CreateLocationForm
             title="Order Locations"
             loading={actionsLoading}
@@ -255,7 +311,7 @@ function OrderPage() {
             onChange={onCargoChanged}
             loading={actionsLoading}
             disabled={!isOrderEditAvailable}
-            cargos={cargos || order?.cargos}
+            cargos={cargos ?? order?.cargos}
           />
         </Col>
       </Row>

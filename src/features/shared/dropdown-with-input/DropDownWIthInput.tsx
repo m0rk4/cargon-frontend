@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Divider, Input, Select, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -19,7 +19,11 @@ function DropDownWithInput({
   options,
   value,
 }: DropDownWithInputProps) {
-  const [items, setItems] = useState<string[]>(options);
+  useEffect(() => {
+    setItems(options);
+  }, [options]);
+
+  const [items, setItems] = useState<string[]>([]);
   const [name, setName] = useState('');
 
   const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {

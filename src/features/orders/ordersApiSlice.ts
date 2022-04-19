@@ -3,6 +3,7 @@ import { Order } from './models/order.interface';
 import { CreateOrderDto } from './models/create-order-dto.interface';
 import { BookOrderDto } from './models/book-order-dto.interface';
 import { UpdateOrderCargos } from './models/update-order-cargos.interface';
+import { UpdateOrderLocations } from './models/update-order-locations.interface';
 
 const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -56,6 +57,15 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         url: `/order/${orderId}/cargos`,
         method: 'PUT',
         body: cargos,
+      }),
+      invalidatesTags: (result, error, { orderId }) =>
+        error ? [] : [{ type: 'Order' as const, id: orderId }],
+    }),
+    updateOrderLocations: builder.mutation<Order, UpdateOrderLocations>({
+      query: ({ orderId, fromLocation, toLocation }) => ({
+        url: `/order/${orderId}/locations`,
+        method: 'PUT',
+        body: { fromLocation, toLocation },
       }),
       invalidatesTags: (result, error, { orderId }) =>
         error ? [] : [{ type: 'Order' as const, id: orderId }],
@@ -125,6 +135,7 @@ export const {
   useGetDriverOrdersQuery,
   useGetOrderQuery,
   useUpdateOrderCargosMutation,
+  useUpdateOrderLocationsMutation,
   useGetApprovedOrdersQuery,
   useReleaseOrderMutation,
   useCompleteOrderMutation,
