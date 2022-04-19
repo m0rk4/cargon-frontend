@@ -30,7 +30,7 @@ function UnauthorizedLayout() {
       </Layout.Header>
       <Layout.Content
         style={{
-          height: 'calc(100vh - 105px)',
+          height: 'calc(100vh - 104px)',
           marginTop: '40px',
           backgroundImage: `url(${boats})`,
           backgroundSize: 'cover',
