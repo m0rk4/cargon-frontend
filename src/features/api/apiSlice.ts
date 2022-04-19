@@ -29,7 +29,11 @@ const baseQueryWithTokenExpirationHandling: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401 && (args as FetchArgs).url !== '/auth/signin') {
+  if (
+    result.error &&
+    result.error.status === 401 &&
+    (args as FetchArgs).url !== '/auth/signin'
+  ) {
     api.dispatch(triggerExpirationPopup(true));
   }
   return result;

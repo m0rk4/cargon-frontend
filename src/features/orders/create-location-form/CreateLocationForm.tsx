@@ -53,15 +53,19 @@ const CreateLocationForm = ({
 }: CreateLocationFormProps) => {
   const form = createRef<FormInstance>();
 
-  useEffect(() => {
-    form.current?.setFieldsValue({
+  const formState = () => {
+    return {
       streetFrom: fromLocation?.street?.name,
       streetTo: toLocation?.street?.name,
       cityFrom: fromLocation?.city?.name,
       cityTo: toLocation?.city?.name,
       homeFrom: fromLocation?.home,
       homeTo: toLocation?.home,
-    });
+    };
+  };
+
+  useEffect(() => {
+    form.current?.setFieldsValue(formState());
   }, [fromLocation, toLocation]);
 
   const onStreetChange = (key: 'streetTo' | 'streetFrom', street: string) => {
@@ -122,6 +126,7 @@ const CreateLocationForm = ({
       <Col span={24}>
         <Card loading={loading} title={title} style={{ height: '100%' }}>
           <Form
+            initialValues={formState()}
             onFieldsChange={onFormChanged}
             layout={'vertical'}
             ref={form}
