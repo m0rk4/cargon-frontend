@@ -2,11 +2,12 @@ import React from 'react';
 import { GeoLocation } from '../../locations/models/location.interface';
 import { Card, Col, Descriptions, Row, Table, Typography } from 'antd';
 import { Cargo } from '../models/cargo.interface';
+import { DeepPartial } from '@reduxjs/toolkit';
 
 type OrderConfirmationProps = {
-  cargos: Cargo[];
-  fromLocation: GeoLocation | undefined;
-  toLocation: GeoLocation | undefined;
+  cargos: Partial<Cargo>[];
+  fromLocation?: DeepPartial<GeoLocation>;
+  toLocation?: DeepPartial<GeoLocation>;
 };
 
 function OrderConfirmation({
@@ -51,19 +52,19 @@ function OrderConfirmation({
           </Typography.Title>
           <Descriptions layout="horizontal" bordered>
             <Descriptions.Item label="Source City">
-              {fromLocation?.city.name}
+              {fromLocation?.city?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Source Street">
-              {fromLocation?.street.name}
+              {fromLocation?.street?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Source Home">
               {fromLocation?.home}
             </Descriptions.Item>
             <Descriptions.Item label="Destination City">
-              {toLocation?.city.name}
+              {toLocation?.city?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Destination Street">
-              {toLocation?.street.name}
+              {toLocation?.street?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Destination Home">
               {toLocation?.home}

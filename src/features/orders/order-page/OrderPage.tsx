@@ -1,7 +1,7 @@
-import { Col, Divider, message, Row, Typography } from 'antd';
+import { Button, Col, Divider, message, Row, Typography } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateLocationForm from '../create-location-form/CreateLocationForm';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { GeoLocation } from '../../locations/models/location.interface';
 import {
   useBookOrderMutation,
@@ -9,6 +9,7 @@ import {
   useDeclineOrderMutation,
   useGetOrderQuery,
   useReleaseOrderMutation,
+  useUpdateOrderCargosMutation,
 } from '../ordersApiSlice';
 import NetworkErrorResult from '../../shared/network-error-result/NetworkErrorResult';
 import { CheckCircleOutlined } from '@ant-design/icons';
@@ -29,13 +30,14 @@ import OrderActions from '../order-actions/OrderActions';
 import { useAuth } from '../../hooks/useAuth';
 import NotFoundPage from '../../shared/not-found';
 import { AppRoutes } from '../../routes/models/routes.enum';
+import { DeepPartial } from '@reduxjs/toolkit';
 
 function OrderPage() {
   const { user } = useAuth();
   const { orderId } = useParams();
-  const [fromLocation, setFromLocation] = useState<GeoLocation>();
-  const [toLocation, setToLocation] = useState<GeoLocation>();
-  const [cargos, setCargos] = useState<Cargo[]>();
+  const [fromLocation, setFromLocation] = useState<DeepPartial<GeoLocation>>();
+  const [toLocation, setToLocation] = useState<DeepPartial<GeoLocation>>();
+  const [cargos, setCargos] = useState<Partial<Cargo>[]>();
   const [vehicles = [], setVehicles] = useState<Vehicle[]>();
   const [isModalVisible, setModalVisible] = useState(false);
   const navigate = useNavigate();
@@ -49,6 +51,8 @@ function OrderPage() {
   const [declineOrder, { isLoading: isDeclining }] = useDeclineOrderMutation();
   const [releaseOrder, { isLoading: isReleasing }] = useReleaseOrderMutation();
   const [bookOrder, { isLoading: isBooking }] = useBookOrderMutation();
+  const [updateOrderCargos, { isLoading: isUpdatingCargos }] =
+    useUpdateOrderCargosMutation();
   const [completeOrder, { isLoading: isCompleting }] =
     useCompleteOrderMutation();
   const [getDriverVehicles, { isFetching: isDriverVehiclesFetching }] =
@@ -59,6 +63,7 @@ function OrderPage() {
     isDeclining ||
     isReleasing ||
     isCompleting ||
+    isUpdatingCargos ||
     isDriverVehiclesFetching;
 
   if (isError) {
@@ -127,11 +132,62 @@ function OrderPage() {
     }
   };
 
+  const cargosChanged = useMemo(() => {
+    const equals = (cargoFirst: Partial<Cargo>, cargoSecond: Partial<Cargo>) =>
+      cargoFirst.name === cargoSecond.name &&
+      cargoFirst.length === cargoSecond.length &&
+      cargoFirst.height === cargoSecond.height &&
+      cargoFirst.width === cargoSecond.width &&
+      cargoFirst.weight === cargoSecond.weight;
+    return (
+      cargos &&
+      (cargos.length !== order?.cargos?.length ||
+        !order?.cargos?.every(
+          (value, index) =>
+            cargos && cargos[index] && equals(cargos[index], value),
+        ))
+    );
+  }, [cargos]);
+
+  const isLocationsChanged = useMemo(
+    () =>
+      JSON.stringify(toLocation) !== JSON.stringify(order?.toLocation) ||
+      JSON.stringify(fromLocation) !== JSON.stringify(order?.fromLocation),
+    [toLocation, fromLocation],
+  );
+
   const isUserOrderOwner = user?.id === order?.user?.id;
   const isOrderEditAvailable =
     isUserOrderOwner &&
     (order?.status === OrderStatus.PENDING ||
       order?.status === OrderStatus.APPROVED);
+
+  const onCargoChanged = (cargos: Partial<Cargo>[]) => {
+    setCargos(cargos);
+  };
+
+  const onToLocationChanged = (location: DeepPartial<GeoLocation>) => {
+    console.log(location);
+    setToLocation(location);
+  };
+
+  const onFromLocationChanged = (location: DeepPartial<GeoLocation>) => {
+    setFromLocation(location);
+  };
+
+  const onCargoSubmitted = async () => {
+    try {
+      await updateOrderCargos({ orderId, cargos: cargos as Cargo[] }).unwrap();
+      setCargos(undefined);
+      message.success('Order Cargos updated!');
+    } catch (e) {
+      message.error('Failed to update order cargos!');
+    }
+  };
+
+  const onLocationsSubmitted = () => {
+    console.log({ fromLocation, toLocation });
+  };
 
   return (
     <>
@@ -173,23 +229,32 @@ function OrderPage() {
       <Row gutter={[8, 16]}>
         <Col span={12}>
           <CreateLocationForm
+            title="Order Locations"
             loading={actionsLoading}
             disabled={!isOrderEditAvailable}
-            title="Order Locations"
-            setFromLocation={setFromLocation}
-            setToLocation={setToLocation}
             fromLocation={fromLocation ?? order?.fromLocation}
             toLocation={toLocation ?? order?.toLocation}
             streets={streets}
             cities={cities}
+            onSubmit={onLocationsSubmitted}
+            onFromLocationChanged={onFromLocationChanged}
+            onToLocationChanged={onToLocationChanged}
           />
         </Col>
         <Col span={12}>
+          <Button
+            disabled={!cargosChanged}
+            onClick={() => setCargos(order?.cargos)}
+            type="primary"
+          >
+            Reset To Defaults
+          </Button>
           <CreateCargoForm
+            title="Order Cargos"
+            onSubmit={onCargoSubmitted}
+            onChange={onCargoChanged}
             loading={actionsLoading}
             disabled={!isOrderEditAvailable}
-            title="Order Cargos"
-            setCargos={setCargos}
             cargos={cargos || order?.cargos}
           />
         </Col>

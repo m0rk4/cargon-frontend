@@ -16,6 +16,7 @@ import { openNotification } from '../../util/notification';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Cargo } from '../models/cargo.interface';
 import Loading from '../../shared/loading';
+import { DeepPartial } from '@reduxjs/toolkit';
 
 const { Step } = Steps;
 
@@ -36,9 +37,9 @@ const steps = [
 
 function CreateOrderPage() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [cargos, setCargos] = useState<Cargo[]>([]);
-  const [fromLocation, setFromLocation] = useState<GeoLocation>();
-  const [toLocation, setToLocation] = useState<GeoLocation>();
+  const [cargos, setCargos] = useState<Partial<Cargo>[]>([]);
+  const [fromLocation, setFromLocation] = useState<DeepPartial<GeoLocation>>();
+  const [toLocation, setToLocation] = useState<DeepPartial<GeoLocation>>();
 
   const {
     data: streets = [],
@@ -65,35 +66,66 @@ function CreateOrderPage() {
   };
 
   const onProceed = async () => {
-    if (!toLocation || !fromLocation) {
+    const isToLocationSpecified =
+      toLocation &&
+      toLocation.home &&
+      toLocation.city?.name &&
+      toLocation.street?.name;
+    const isFromLocationSpecified =
+      fromLocation &&
+      fromLocation.home &&
+      fromLocation.city?.name &&
+      fromLocation.street?.name;
+    if (!isToLocationSpecified || !isFromLocationSpecified) {
       message.error("Seems like you haven't specified locations!");
       return;
     }
 
+    const requestedCargos = cargos
+      .map((cargoPartial) => {
+        if (
+          !cargoPartial.name ||
+          !cargoPartial.length ||
+          !cargoPartial.height ||
+          !cargoPartial.width ||
+          !cargoPartial.weight
+        )
+          return null;
+        return { ...cargoPartial } as Cargo;
+      })
+      .filter((cargo) => cargo !== null) as Cargo[];
+
+    const requestedFromLocation = fromLocation as GeoLocation;
+    const requestedToLocation = toLocation as GeoLocation;
+
     const body: CreateOrderDto = {
       toLocation: {
-        home: toLocation.home,
+        home: requestedToLocation.home,
         street:
           streets.find(
-            (streetFromDb) => streetFromDb.name === toLocation?.street?.name,
-          ) ?? toLocation.street,
+            (streetFromDb) =>
+              streetFromDb.name === requestedToLocation.street.name,
+          ) ?? requestedToLocation.street,
         city:
           cities.find(
-            (streetFromDb) => streetFromDb.name === toLocation?.city?.name,
-          ) ?? toLocation.city,
+            (streetFromDb) =>
+              streetFromDb.name === requestedToLocation?.city?.name,
+          ) ?? requestedToLocation.city,
       },
       fromLocation: {
-        home: fromLocation.home,
+        home: requestedFromLocation.home,
         street:
           streets.find(
-            (streetFromDb) => streetFromDb.name === fromLocation?.street?.name,
-          ) ?? fromLocation.street,
+            (streetFromDb) =>
+              streetFromDb.name === requestedFromLocation?.street?.name,
+          ) ?? requestedFromLocation.street,
         city:
           cities.find(
-            (streetFromDb) => streetFromDb.name === fromLocation?.city?.name,
-          ) ?? fromLocation.city,
+            (streetFromDb) =>
+              streetFromDb.name === requestedFromLocation?.city?.name,
+          ) ?? requestedFromLocation.city,
       },
-      cargos,
+      cargos: requestedCargos,
     };
 
     try {
@@ -112,6 +144,18 @@ function CreateOrderPage() {
     }
   };
 
+  const onCargoChanged = (cargos: Partial<Cargo>[]) => {
+    setCargos(cargos);
+  };
+
+  const onFromLocationChange = (location: DeepPartial<GeoLocation>) => {
+    setFromLocation(location);
+  };
+
+  const onToLocationChange = (location: DeepPartial<GeoLocation>) => {
+    setToLocation(location);
+  };
+
   return (
     <>
       <Steps style={{ marginBottom: '40px' }} current={currentStep}>
@@ -121,10 +165,10 @@ function CreateOrderPage() {
       </Steps>
       {currentStep === 0 && (
         <CreateCargoForm
+          onChange={onCargoChanged}
           title="Please Add Order Cargos:"
           cargos={cargos}
-          setCargos={(cargos) => setCargos(cargos)}
-          next={nextStep}
+          onSubmit={nextStep}
         />
       )}
       {currentStep === 1 && (
@@ -132,11 +176,11 @@ function CreateOrderPage() {
           title="Please add source and destination locations"
           cities={cities}
           streets={streets}
-          next={nextStep}
+          onSubmit={nextStep}
           fromLocation={fromLocation}
           toLocation={toLocation}
-          setFromLocation={setFromLocation}
-          setToLocation={setToLocation}
+          onFromLocationChanged={onFromLocationChange}
+          onToLocationChanged={onToLocationChange}
         />
       )}
       {currentStep === 2 && (

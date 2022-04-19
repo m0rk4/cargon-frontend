@@ -15,6 +15,7 @@ import DropDownWIthInput from '../../shared/dropdown-with-input/DropDownWIthInpu
 import { GeoLocation } from '../../locations/models/location.interface';
 import { Street } from '../../locations/models/street.interface';
 import { City } from '../../locations/models/city.interface';
+import { DeepPartial } from '@reduxjs/toolkit';
 
 interface CreateLocationFormState {
   cityFrom: string;
@@ -28,14 +29,14 @@ interface CreateLocationFormState {
 type CreateLocationFormProps = {
   loading?: boolean;
   title?: string;
-  next?: () => void;
-  setFromLocation: (val: GeoLocation) => void;
-  setToLocation: (val: GeoLocation) => void;
-  fromLocation?: GeoLocation;
-  toLocation?: GeoLocation;
+  fromLocation?: DeepPartial<GeoLocation>;
+  toLocation?: DeepPartial<GeoLocation>;
   streets: Street[];
   cities: City[];
   disabled?: boolean;
+  onSubmit: () => void;
+  onFromLocationChanged: (location: DeepPartial<GeoLocation>) => void;
+  onToLocationChanged: (location: DeepPartial<GeoLocation>) => void;
 };
 
 const CreateLocationForm = ({
@@ -44,31 +45,31 @@ const CreateLocationForm = ({
   title,
   streets,
   cities,
-  next,
-  setFromLocation,
-  setToLocation,
+  onSubmit,
+  onFromLocationChanged,
+  onToLocationChanged,
   fromLocation,
   toLocation,
 }: CreateLocationFormProps) => {
-  const formRef = createRef<FormInstance>();
+  const form = createRef<FormInstance>();
 
   useEffect(() => {
-    formRef.current?.setFieldsValue({
-      streetFrom: fromLocation?.street.name,
-      streetTo: toLocation?.street.name,
-      cityFrom: fromLocation?.city.name,
-      cityTo: toLocation?.city.name,
+    form.current?.setFieldsValue({
+      streetFrom: fromLocation?.street?.name,
+      streetTo: toLocation?.street?.name,
+      cityFrom: fromLocation?.city?.name,
+      cityTo: toLocation?.city?.name,
       homeFrom: fromLocation?.home,
       homeTo: toLocation?.home,
     });
   }, [fromLocation, toLocation]);
 
   const onStreetChange = (key: 'streetTo' | 'streetFrom', street: string) => {
-    formRef.current?.setFieldsValue({ [key]: street });
+    form.current?.setFieldsValue({ [key]: street });
   };
 
   const onCityChange = (key: 'cityTo' | 'cityFrom', city: string) => {
-    formRef.current?.setFieldsValue({ [key]: city });
+    form.current?.setFieldsValue({ [key]: city });
   };
 
   const onFinish = (state: CreateLocationFormState) => {
@@ -81,6 +82,7 @@ const CreateLocationForm = ({
         name: state.cityTo,
       },
     };
+
     const fromLocation = {
       home: state.homeFrom,
       street: {
@@ -95,9 +97,24 @@ const CreateLocationForm = ({
       return;
     }
 
-    setToLocation(toLocation);
-    setFromLocation(fromLocation);
-    next && next();
+    onSubmit();
+  };
+
+  const onFormChanged = () => {
+    const value: Partial<CreateLocationFormState> =
+      form.current?.getFieldsValue();
+    if (!value) return;
+
+    onFromLocationChanged({
+      street: { name: value.streetFrom },
+      city: { name: value.cityFrom },
+      home: value.homeFrom,
+    });
+    onToLocationChanged({
+      street: { name: value.streetTo },
+      city: { name: value.cityTo },
+      home: value.homeTo,
+    });
   };
 
   return (
@@ -105,8 +122,9 @@ const CreateLocationForm = ({
       <Col span={24}>
         <Card loading={loading} title={title} style={{ height: '100%' }}>
           <Form
+            onFieldsChange={onFormChanged}
             layout={'vertical'}
-            ref={formRef}
+            ref={form}
             name="basic"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}

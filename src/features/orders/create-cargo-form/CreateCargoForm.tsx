@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   Card,
   Col,
   Form,
+  FormInstance,
   Input,
   InputNumber,
   message,
@@ -21,12 +22,16 @@ import {
 } from '@ant-design/icons';
 import { Cargo } from '../models/cargo.interface';
 
+interface CreateCargoFormState {
+  cargos?: Partial<Cargo>[];
+}
+
 type CreateCargoFormProps = {
   loading?: boolean;
   title: string;
-  next?: () => void;
-  setCargos: (cargos: Cargo[]) => void;
-  cargos?: Cargo[];
+  cargos?: Partial<Cargo>[];
+  onChange: (v: Partial<Cargo>[]) => void;
+  onSubmit: () => void;
   disabled?: boolean;
 };
 
@@ -34,17 +39,37 @@ function CreateCargoForm({
   loading,
   disabled,
   title,
-  next,
   cargos = [],
-  setCargos,
+  onChange,
+  onSubmit,
 }: CreateCargoFormProps) {
+  const form = useRef<FormInstance>(null);
+  useEffect(() => {
+    form.current?.setFieldsValue({
+      cargos:
+        cargos?.map((cargo) => ({
+          width: cargo?.width,
+          height: cargo?.height,
+          length: cargo?.length,
+          name: cargo?.name,
+          weight: cargo?.weight,
+        })) ?? [],
+    });
+  }, [cargos]);
+
   const onFinish = ({ cargos }: { cargos: Cargo[] }) => {
     if (!cargos?.length) {
       message.warn('Please enter at least one cargo!');
       return;
     }
-    setCargos(cargos);
-    next && next();
+    onSubmit();
+  };
+
+  const onFormChange = () => {
+    const value: CreateCargoFormState = form.current?.getFieldsValue();
+
+    if (!value?.cargos?.length) onChange([]);
+    else onChange(value.cargos);
   };
 
   return (
@@ -52,6 +77,8 @@ function CreateCargoForm({
       <Col span={24}>
         <Card loading={loading} title={title} style={{ height: '100%' }}>
           <Form
+            ref={form}
+            onFieldsChange={onFormChange}
             name="dynamic_form_nest_item"
             onFinish={onFinish}
             autoComplete="off"
