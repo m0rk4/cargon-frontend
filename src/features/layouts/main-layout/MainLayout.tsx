@@ -43,6 +43,7 @@ const URL_TO_MENU_MAP = new Map<string, [string, string]>([
   ],
   [`${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`, ['sub3', 'sub3-3']],
   [`${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`, ['sub3', 'sub3-2']],
+  [`${AppRoutes.ADMIN}/${AppRoutes.STATS}`, ['sub4', 'sub4-1']],
   [AppRoutes.NOT_EXISTING_ROUTE, ['', '']],
 ]);
 
@@ -83,7 +84,7 @@ function MainLayout() {
       >
         <img src={logo} className="logo" alt={'logo'} />
         <Menu
-          defaultOpenKeys={['sub1', 'sub2', 'sub3']}
+          defaultOpenKeys={['sub1', 'sub2', 'sub3', 'sub4']}
           theme="dark"
           mode="inline"
           defaultSelectedKeys={[menuId]}
@@ -140,6 +141,15 @@ function MainLayout() {
               <Menu.Item icon={<OrderedListOutlined />} key="sub3-3">
                 <Link to={`/${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`}>
                   Driver History
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+          )}
+          {is(UserRole.ADMIN) && (
+            <SubMenu key="sub4" icon={<ApartmentOutlined />} title="Admin">
+              <Menu.Item icon={<CarOutlined />} key="sub4-1">
+                <Link to={`/${AppRoutes.ADMIN}/${AppRoutes.STATS}`}>
+                  View Statistics
                 </Link>
               </Menu.Item>
             </SubMenu>

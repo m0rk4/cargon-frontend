@@ -16,6 +16,7 @@ import { formatDistanceToNow } from 'date-fns';
 import UserLink from '../../shared/user-link/UserLink';
 import useSortedByTime from '../../hooks/useSortedByTime';
 import { TransportApplication } from '../models/transport-application.interface';
+import { downloadBlob } from '../../util/download';
 
 function TransportApplicationsPage() {
   const {
@@ -60,12 +61,7 @@ function TransportApplicationsPage() {
     const blob = await getTransportApplicationDocument(
       documentPublicId,
     ).unwrap();
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(new Blob([blob]));
-    link.setAttribute('download', `${documentPublicId}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadBlob(blob, `${documentPublicId}.pdf`);
   };
 
   const renderActions = (id: number) => (
