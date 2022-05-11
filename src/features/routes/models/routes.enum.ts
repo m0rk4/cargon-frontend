@@ -1,5 +1,7 @@
 export enum AppRoutes {
   DRIVER = 'driver',
+  ADMIN = 'admin',
+  STATS = 'stats',
   CREATE_TRANSPORT_APPLICATION = 'create-transport-application',
   CREATE_ORDER = 'create-order',
   ORDERS_HISTORY = 'order-history',
@@ -30,4 +32,5 @@ export const AllAppProtectedRoutes: string[] = [
   `${AppRoutes.DRIVER}/${AppRoutes.CREATE_TRANSPORT_APPLICATION}`,
   `${AppRoutes.DRIVER}/${AppRoutes.APPROVED_ORDERS}`,
   `${AppRoutes.DRIVER}/${AppRoutes.DRIVER_HISTORY}`,
+  `${AppRoutes.ADMIN}/${AppRoutes.STATS}`,
 ];

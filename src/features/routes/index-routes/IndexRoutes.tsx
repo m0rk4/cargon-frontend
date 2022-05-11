@@ -48,6 +48,11 @@ const DriverHistoryPage = lazy(
 );
 
 /**
+ * Admin
+ */
+const StatsPage = lazy(() => import('../../admin/StatsPage'));
+
+/**
  * For common use
  */
 const NotFoundPage = lazy(() => import('../../shared/not-found/NotFoundPage'));
@@ -218,6 +223,20 @@ function IndexRoutes() {
               outlet={
                 <Suspense fallback={<Loading />}>
                   <ApprovedOrdersPage />
+                </Suspense>
+              }
+            />
+          }
+        />
+        <Route
+          path={`/${AppRoutes.ADMIN}/${AppRoutes.STATS}`}
+          element={
+            <ProtectedRoute
+              isAvailable={is(UserRole.ADMIN)}
+              fallbackPath="/"
+              outlet={
+                <Suspense fallback={<Loading />}>
+                  <StatsPage />
                 </Suspense>
               }
             />

@@ -16,10 +16,10 @@ const extendedApiSlice = apiSlice.injectEndpoints({
         })),
       ],
     }),
-    getTransportApplicationDocument: builder.query<string, string>({
+    getTransportApplicationDocument: builder.query<Blob, string>({
       query: (documentUid) => ({
         url: `/transport-application/document?documentPublicId=${documentUid}`,
-        responseHandler: (response) => response.text(),
+        responseHandler: (response) => response.blob(),
       }),
     }),
     addTransportApplication: builder.mutation<
