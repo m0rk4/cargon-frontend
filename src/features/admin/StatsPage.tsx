@@ -52,6 +52,9 @@ function StatsPage() {
           <Select.Option value={DocumentType.ORDERS_VOLUMES}>
             Orders Volumes
           </Select.Option>
+          <Select.Option value={DocumentType.USERS_ORDERS_COUNT}>
+            Users Orders Count
+          </Select.Option>
         </Select>
       </Form.Item>
       <Form.Item>
