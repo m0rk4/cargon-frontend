@@ -18,7 +18,7 @@ function TransportApplicationDownloadButton({
       shape="round"
       icon={<DownloadOutlined />}
     >
-      Download
+      Open
     </Button>
   );
 }
